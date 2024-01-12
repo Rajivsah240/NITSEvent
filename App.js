@@ -1,24 +1,22 @@
-import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import Calendar from './components/Calendar';
+import { View, StyleSheet } from 'react-native';
+import HomeScreen from './screen/HomeScreen';
 
-export default function App() {
-  const [selectedDate, setSelectedDate] = useState(null);
-
+const App = () => {
   return (
     <View style={styles.container}>
-      <Calendar onSelectDate={setSelectedDate} selected={selectedDate} />
-      <StatusBar style="auto" />
+      <HomeScreen/>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    // Define any styles for your container if needed
+    // For example:
+    // justifyContent: 'center',
     // alignItems: 'center',
-    justifyContent: 'center',
   },
 });
+
+export default App;
