@@ -15,18 +15,18 @@ const ProfilePic = () => {
 
 const styles = StyleSheet.create({
   ImageContainer: {
-    height: 26,
-    width: 26,
-    borderRadius: 12,
-    borderWidth: 2,
+    height: 36,
+    width: 36,
+    borderRadius: 20,
+    borderWidth: 1,
     borderColor: '#21262E',
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
   },
   Image: {
-    height: 26,
-    width: 26,
+    height: 36,
+    width: 36,
   },
 });
 

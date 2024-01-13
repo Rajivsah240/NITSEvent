@@ -76,6 +76,6 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   scroll: {
-    height: 150,
+    // height: 150,
   },
 })

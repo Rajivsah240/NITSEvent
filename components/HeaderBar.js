@@ -8,9 +8,9 @@ const HeaderBar = () => {
       <GradientBGIcon
         name="menu"
         color='#52555A'
-        size='8'
+        size='12'
       />
-      <Text style={styles.HeaderText}>Hii!</Text>
+      <Text style={styles.HeaderText}>NITS Event</Text>
       <ProfilePic />
     </View>
   )
@@ -18,15 +18,18 @@ const HeaderBar = () => {
 
 const styles = StyleSheet.create({
     HeaderContainer: {
-      padding: 30,
+
+      paddingBottom:30,
+      paddingLeft:30,
+      paddingRight:30,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
     },
     HeaderText: {
       
-      fontSize: 10,
-      color: '#FFFFFF',
+      fontSize: 30,
+      color: 'black',
     },
   });
 export default HeaderBar

@@ -6,13 +6,13 @@ import CustomIcon from './CustomIcon'
 const GradientBGIcon = ({name, color, size}) => {
   return (
     <View style={styles.Container}>
-    <LinearGradient
+    {/* <LinearGradient
       start={{x: 0, y: 0}}
       end={{x: 1, y: 1}}
       colors={['#252A32','#0C0F14']}
-      style={styles.LinearGradientBG}>
+      style={styles.LinearGradientBG}> */}
+    {/* </LinearGradient> */}
       <CustomIcon name={name} color={color} size={size} />
-    </LinearGradient>
   </View>
   )
 }
