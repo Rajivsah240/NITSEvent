@@ -4,6 +4,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import TabNavigator from './navigators/TabNavigator';
 import ProfileScreen from './screen/ProfileScreen';
 import EventScreen from './screen/EventScreen';
+import { StatusBar } from 'expo-status-bar';
 // import SplashScreen from 'react-native-splash-screen';
 
 const Stack = createNativeStackNavigator();
@@ -28,6 +29,7 @@ const App = () => {
           component={ProfileScreen}
           options={{animation: 'slide_from_bottom'}}></Stack.Screen>
       </Stack.Navigator>
+      
     </NavigationContainer>
   );
 };

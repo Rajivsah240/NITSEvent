@@ -8,6 +8,8 @@ import ProfileScreen from "../screen/ProfileScreen";
 
 // import CustomIcon from "../components/CustomIcon";
 import { Ionicons } from "@expo/vector-icons";
+import { AntDesign } from '@expo/vector-icons';
+import { SimpleLineIcons } from '@expo/vector-icons';
 
 
 const Tab = createBottomTabNavigator();
@@ -17,8 +19,8 @@ const TabNavigator = () => {
     <Tab.Navigator
       screenOptions={{
         tabBarHideOnKeyboard: true,
-        // headerShown: false,
-        tabBarShowLabel: true,
+        headerShown: false,
+        tabBarShowLabel: false,
         tabBarStyle: styles.tabBarStyle,
         // tabBarBackground: () => (
         //   <BlurView
@@ -34,7 +36,8 @@ const TabNavigator = () => {
         component={HomeScreen}
         options={{
           tabBarIcon: ({ focused }) => (
-            <Ionicons name="md-checkmark-circle" size={25} color="green" />
+            // <Ionicons name="home" size={25} color="red" />
+            <AntDesign name="home" size={24} color={focused?"yellow":"red"} />
           ),
         }}
       ></Tab.Screen>
@@ -43,7 +46,7 @@ const TabNavigator = () => {
         component={EventScreen}
         options={{
           tabBarIcon: ({ focused }) => (
-            <Ionicons name="md-checkmark-circle" size={25} color="green" />
+            <SimpleLineIcons name="event" size={24} color={focused?"yellow":"red"} />
           ),
         }}
       ></Tab.Screen>
@@ -51,8 +54,8 @@ const TabNavigator = () => {
         name="Profile"
         component={ProfileScreen}
         options={{
-          tabBarIcon: ({ focused, color, size }) => (
-            <Ionicons name="md-checkmark-circle" size={25} color="green" />
+          tabBarIcon: ({ focused }) => (
+            <AntDesign name="user" size={24} color={focused?"yellow":"red"} />
           ),
         }}
       ></Tab.Screen>
@@ -68,6 +71,9 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
     elevation: 0,
     borderTopColor: "transparent",
+    marginHorizontal:50,
+    marginBottom:30,
+    borderRadius:25
   },
   //   BlurViewStyles: {
   //     position: 'absolute',
