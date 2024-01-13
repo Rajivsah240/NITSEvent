@@ -27,9 +27,10 @@ const HomeScreen = () => {
 
 const styles = StyleSheet.create({
   mainContainer:{
-    marginTop:20,
+    paddingVertical:20,
     flexDirection:'column',
-    borderRadius:15          
+    borderRadius:15,
+    backgroundColor:'#f0e5d8'          
   },
   container: {
     // flex: 1,
