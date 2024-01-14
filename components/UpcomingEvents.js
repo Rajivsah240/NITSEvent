@@ -53,13 +53,28 @@ const UpcomingEvents = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 20, // Add some margin at the bottom to separate from other components
+    marginBottom: 20,
+    marginHorizontal:10,
+    backgroundColor:'#f4f5ff',
+    padding:10,
+    borderRadius:15,
+    borderWidth: 1,
+    borderColor: '#feffff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 10,
+      height: 0,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 15,
   },
   text: {
     fontSize: 22,
     paddingLeft: 12,
     paddingBottom: 12,
     fontWeight: "bold",
+    color:'black'
   },
   scrollViewContent: {
     alignItems: 'center',

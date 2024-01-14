@@ -19,9 +19,9 @@ const Clubs = () => {
     </View>
   );
   return (
-    <View>
+    <View style={styles.container}>
       <Text style={styles.text}>Clubs</Text>
-      <View style={styles.container}>
+      <View style={styles.clubContainer}>
       <FlatList
         data={clubImages}
         keyExtractor={(item, index) => index.toString()}
@@ -34,14 +34,32 @@ const Clubs = () => {
 };
 
 const styles = StyleSheet.create({
+  container:{
+    marginBottom: 20,
+    marginHorizontal:10,
+    backgroundColor:'#f4f5ff',
+    padding:10,
+    borderRadius:15,
+    borderWidth: 1,
+    borderColor: '#feffff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 10,
+      height: 0,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 15,
+  },
   text: {
     fontSize: 22,
     paddingLeft: 12,
     paddingBottom: 12,
     fontWeight: "bold",
   },
-  container: {
+  clubContainer: {
     alignItems:"center",
+
   },
   clubImageContainer: {
     borderColor:'red',

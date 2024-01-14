@@ -1,7 +1,16 @@
-import {React,useState} from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Avatar, Title, Caption, Drawer, Text, TouchableRipple, Switch } from 'react-native-paper';
-
+import { React, useState } from "react";
+import { View, StyleSheet } from "react-native";
+import {
+  Avatar,
+  Title,
+  Caption,
+  Drawer,
+  Text,
+  TouchableRipple,
+  Switch,
+} from "react-native-paper";
+import { MaterialIcons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 const ProfileScreen = () => {
   const [isDarkTheme, setIsDarkTheme] = useState(false);
 
@@ -12,9 +21,9 @@ const ProfileScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.userInfoSection}>
-        <View style={{ flexDirection: 'row', marginTop: 15 }}>
+        <View style={{ flexDirection: "row", marginTop: 15 }}>
           <Avatar.Image
-            source={require('../assets/images/avatar.jpg')}
+            source={require("../assets/images/avatar.jpg")}
             size={80}
           />
           <View style={{ marginLeft: 20 }}>
@@ -36,16 +45,20 @@ const ProfileScreen = () => {
           <Text style={styles.eventCount}>4</Text>
         </View>
       </View>
-      <Drawer.Section style={styles.drawerSection} title='General' titleStyle={styles.drawerTitle}>
-        <TouchableRipple onPress={() => console.log('Navigate to Dashboard')}>
+      <Drawer.Section
+        style={styles.drawerSection}
+      >
+        <TouchableRipple onPress={() => console.log("Navigate to Dashboard")}>
           <View style={styles.drawerItem}>
-            <Text>Registered Events</Text>
+            <MaterialIcons name="event-note" size={35} color="black" />
+            <Text style={styles.drawerItemText}>Registered Events</Text>
           </View>
         </TouchableRipple>
 
-        <TouchableRipple onPress={() => console.log('Navigate to Settings')}>
+        <TouchableRipple onPress={() => console.log("Navigate to Settings")}>
           <View style={styles.drawerItem}>
-            <Text>Log Out</Text>
+            <Feather name="log-out" size={35} color="black" />
+            <Text style={styles.drawerItemText}>Log Out</Text>
           </View>
         </TouchableRipple>
       </Drawer.Section>
@@ -66,59 +79,64 @@ const ProfileScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:'#f0e5d8'
+    backgroundColor: "#f4f5ff",
   },
   userInfoSection: {
     paddingLeft: 20,
   },
   title: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
+    
   },
   caption: {
     fontSize: 14,
     lineHeight: 14,
-    color: '#999',
+    color: "#999",
   },
   drawerSection: {
     marginTop: 15,
   },
   drawerItem: {
-    
-    // alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingVertical: 10,
     paddingHorizontal: 15,
   },
+  drawerItemText: {
+    paddingLeft: 5,
+    fontSize:18
+  },
 
   eventBox: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    backgroundColor: '#fff',
-    marginHorizontal:15,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    backgroundColor: "#f0e5d8",
+    marginHorizontal: 15,
     padding: 10,
     marginVertical: 10,
-    borderRadius: 25
+    borderRadius: 25,
   },
 
   eventItem: {
-    alignItems: 'center',
+    alignItems: "center",
   },
 
   eventLabel: {
     fontSize: 14,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
   },
 
   eventCount: {
     fontSize: 20,
-    fontWeight: 'bold',
-    color: '#0066cc', // or your preferred color
+    fontWeight: "bold",
+    color: "#0066cc"
   },
   drawerTitle: {
-    fontSize: 25, // Adjust the font size as needed
-    fontWeight: 'bold',
-    color: '#333', // Set your preferred color
+    fontSize: 35,
+    fontWeight: "bold",
+    color: "white",
   },
 });
 

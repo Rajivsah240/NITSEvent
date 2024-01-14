@@ -6,15 +6,13 @@ import ProfileScreen from './screen/ProfileScreen';
 import EventScreen from './screen/EventScreen';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView,StyleSheet } from 'react-native';
-
-// import SplashScreen from 'react-native-splash-screen';
-
+import LinearGradient from 'expo-linear-gradient';
+// import * as SplashScreen from 'expo-splash-screen';
+// SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
 
 const App = () => {
-  // useEffect(() => {
-  //   SplashScreen.hide();
-  // }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar/>
@@ -45,7 +43,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop:25,
-    backgroundColor:'#f0e5d8',
+    backgroundColor:'#f4f5ff',
   },
 });
 
