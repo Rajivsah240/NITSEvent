@@ -7,7 +7,8 @@ import EventScreen from "../screen/EventScreen";
 import ProfileScreen from "../screen/ProfileScreen";
 
 // import CustomIcon from "../components/CustomIcon";
-import { Ionicons } from "@expo/vector-icons";
+import { BlurView } from 'expo-blur';
+
 import { AntDesign } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
 
@@ -22,13 +23,13 @@ const TabNavigator = () => {
         headerShown: false,
         tabBarShowLabel: false,
         tabBarStyle: styles.tabBarStyle,
-        // tabBarBackground: () => (
-        //   <BlurView
-        //     overlayColor=""
-        //     blurAmount={15}
-        //     style={styles.BlurViewStyles}
-        //   />
-        // ),
+        tabBarBackground: () => (
+          <BlurView
+            overflow='hidden'
+            intensity={40}
+            style={styles.BlurViewStyles}
+          />
+        ),
       }}
     >
       <Tab.Screen
@@ -68,20 +69,19 @@ const styles = StyleSheet.create({
     height: 60,
     position: "absolute",
     backgroundColor: "rgba(12,15,20,0.5)",
-    borderTopWidth: 0,
+    // borderTopWidth: 0,
     elevation: 0,
     borderTopColor: "transparent",
-    marginHorizontal:50,
+    marginHorizontal:60,
     marginBottom:30,
-    borderRadius:25
+    borderRadius:25,
+
   },
-  //   BlurViewStyles: {
-  //     position: 'absolute',
-  //     top: 0,
-  //     bottom: 0,
-  //     left: 0,
-  //     right: 0,
-  //   },
+    BlurViewStyles: {
+      ...StyleSheet.absoluteFillObject,
+      borderRadius:25,
+      
+    },
 });
 
 export default TabNavigator;

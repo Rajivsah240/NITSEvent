@@ -5,6 +5,8 @@ import TabNavigator from './navigators/TabNavigator';
 import ProfileScreen from './screen/ProfileScreen';
 import EventScreen from './screen/EventScreen';
 import { StatusBar } from 'expo-status-bar';
+import { SafeAreaView,StyleSheet } from 'react-native';
+
 // import SplashScreen from 'react-native-splash-screen';
 
 const Stack = createNativeStackNavigator();
@@ -14,6 +16,8 @@ const App = () => {
   //   SplashScreen.hide();
   // }, []);
   return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar/>
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
         <Stack.Screen
@@ -31,20 +35,18 @@ const App = () => {
       </Stack.Navigator>
       
     </NavigationContainer>
+    </SafeAreaView>
   );
 };
 
 
 
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor:'#f0e5d8'
-//     // Define any styles for your container if needed
-//     // For example:
-//     // justifyContent: 'center',
-//     // alignItems: 'center',
-//   },
-// });
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop:25,
+    backgroundColor:'#f0e5d8',
+  },
+});
 
 export default App;

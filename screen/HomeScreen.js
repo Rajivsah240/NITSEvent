@@ -6,6 +6,7 @@ import HeaderEvent from "../components/HeaderEvent";
 import HeaderBar from "../components/HeaderBar"
 import UpcomingEvents from "../components/UpcomingEvents";
 import PastEvents from "../components/PastEvents";
+import Clubs from "../components/Clubs";
 const HomeScreen = () => {
   const [selectedDate, setSelectedDate] = useState(null);
 
@@ -20,6 +21,7 @@ const HomeScreen = () => {
       </View>
       <UpcomingEvents/>
       <PastEvents/>
+      <Clubs/>
     </View>
     </ScrollView>
   );
@@ -27,7 +29,8 @@ const HomeScreen = () => {
 
 const styles = StyleSheet.create({
   mainContainer:{
-    paddingVertical:20,
+    paddingTop:20,
+    paddingBottom:120,
     flexDirection:'column',
     borderRadius:15,
     backgroundColor:'#f0e5d8'          
