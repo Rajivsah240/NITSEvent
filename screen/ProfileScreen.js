@@ -11,12 +11,11 @@ import {
 } from "react-native-paper";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-const ProfileScreen = () => {
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
-
-  const toggleTheme = () => {
-    // Toggle your app's theme (you need to implement this logic)
-    setIsDarkTheme(!isDarkTheme);
+const ProfileScreen = ({navigation}) => {
+  
+  const handleLogin = () => {
+    navigation.replace("LoginScreen");
+    console.log("Login pressed");
   };
   return (
     <View style={styles.container}>
@@ -55,7 +54,7 @@ const ProfileScreen = () => {
           </View>
         </TouchableRipple>
 
-        <TouchableRipple onPress={() => console.log("Navigate to Settings")}>
+        <TouchableRipple onPress={handleLogin}>
           <View style={styles.drawerItem}>
             <Feather name="log-out" size={35} color="black" />
             <Text style={styles.drawerItemText}>Log Out</Text>

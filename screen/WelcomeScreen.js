@@ -19,7 +19,7 @@ const WelcomeScreen = ({ navigation }) => {
   useEffect(() => {
     loadFontsAsync();
     const timeout = setTimeout(() => {
-      navigation.replace("Tab");
+      navigation.replace("LoginScreen");
     }, 3000);
 
     return () => clearTimeout(timeout);

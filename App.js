@@ -8,6 +8,7 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView,StyleSheet } from 'react-native';
 import LinearGradient from 'expo-linear-gradient';
 import WelcomeScreen from './screen/WelcomeScreen';
+import LoginScreen from './screen/LoginScreen';
 
 
 
@@ -21,6 +22,7 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="WelcomeScreen" screenOptions={{headerShown: false}}>
         <Stack.Screen name="WelcomeScreen" component={WelcomeScreen}/>
+        <Stack.Screen name="LoginScreen" component={LoginScreen}/>
         <Stack.Screen
           name="Tab"
           component={TabNavigator}
