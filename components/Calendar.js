@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 10,
+    fontSize: 20,
     fontWeight: 'bold',
   },
   dateSection: {

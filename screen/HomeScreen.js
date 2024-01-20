@@ -10,7 +10,7 @@ import HeaderBar from "../components/HeaderBar";
 import UpcomingEvents from "../components/UpcomingEvents";
 import PastEvents from "../components/PastEvents";
 import Clubs from "../components/Clubs";
-import SearchBar from "../components/SearchBar";
+
 const HomeScreen = () => {
   const [selectedDate, setSelectedDate] = useState(null);
 
@@ -23,7 +23,7 @@ const HomeScreen = () => {
           <Calendar onSelectDate={setSelectedDate} selected={selectedDate} />
           {/* <StatusBar style="auto" /> */}
         </View>
-        <SearchBar/>
+        
         <UpcomingEvents />
         <PastEvents />
         <Clubs />

@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     marginVertical:5
   },
   eventName:{
-    fontSize:24,
+    fontSize:20,
     fontWeight:'bold',
     color:'#5F5F63',
     // fontFamily:'Convergence-Regular'

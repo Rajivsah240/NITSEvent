@@ -1,10 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import SearchBar from '../components/SearchBar'
 
 const EventScreen = () => {
   return (
     <View>
-      <Text>EventScreen</Text>
+      <SearchBar/>
     </View>
   )
 }

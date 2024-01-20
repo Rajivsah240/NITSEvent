@@ -7,17 +7,20 @@ import EventScreen from './screen/EventScreen';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView,StyleSheet } from 'react-native';
 import LinearGradient from 'expo-linear-gradient';
-// import * as SplashScreen from 'expo-splash-screen';
-// SplashScreen.preventAutoHideAsync();
+import WelcomeScreen from './screen/WelcomeScreen';
+
+
+
 const Stack = createNativeStackNavigator();
 
 const App = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar/>
+      {/* <StatusBar hidden={true}/> */}
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Navigator initialRouteName="WelcomeScreen" screenOptions={{headerShown: false}}>
+        <Stack.Screen name="WelcomeScreen" component={WelcomeScreen}/>
         <Stack.Screen
           name="Tab"
           component={TabNavigator}
@@ -42,7 +45,7 @@ const App = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop:25,
+    // paddingTop:25,
     backgroundColor:'#f4f5ff',
   },
 });

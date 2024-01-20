@@ -40,6 +40,20 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         backgroundColor: '#f4f5ff',
         alignItems: 'center',
+        borderRadius:15,
+        borderWidth: 1,
+        borderColor: '#feffff',
+        shadowColor: '#000',
+        shadowColor: '#000',
+        shadowOffset: {
+        width: 10,
+        height: 0,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 15,
+
+
       },
       InputIcon: {
         marginHorizontal: 20,
@@ -48,7 +62,7 @@ const styles = StyleSheet.create({
         flex: 1,
         height: 60,
         fontSize: 14,
-        color: '#fff',
+        color: 'black',
       },
 })
 export default SearchBar
