@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     backgroundColor: "blue",
     padding: 10,
     borderRadius: 5,
-    // marginBottom: 20,
+    marginBottom: 20,
   },
   imageUploadText: {
     color: "white",
