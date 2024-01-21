@@ -8,6 +8,11 @@ const LoginScreen = ({navigation}) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = () => {
+    navigation.navigate("Tab");
+    console.log("Login pressed");
+  };
+
+  const handleSignup = () => {
     navigation.replace("Tab");
     console.log("Login pressed");
   };
@@ -52,8 +57,10 @@ const LoginScreen = ({navigation}) => {
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.googleButton} onPress={() => {}}>
-        <AntDesign  name="google" size={24} color="#dd4b39" />
-          {/* <Text style={styles.buttonText}>Sign in with Google</Text> */}
+          <AntDesign  name="google" size={24} color="#dd4b39" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleSignup}>
+          <Text style={{color:'#71bbde'}}>New Here ? Click Here to SignUp First.</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -80,8 +87,10 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     marginTop: 20,
+    alignItems:'center'
   },
   input: {
+    width:'100%',
     height: 40,
     borderColor: "gray",
     borderWidth: 1,
@@ -110,8 +119,10 @@ const styles = StyleSheet.create({
   loginButton: {
     backgroundColor: "#f4f5ff",
     padding: 10,
+    width:"50%",
     borderRadius: 20,
     alignItems: "center",
+    justifyContent:'center',
     marginBottom: 10,
   },
   googleButton: {

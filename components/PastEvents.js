@@ -1,6 +1,8 @@
 import React from "react";
 import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
-
+import { FontAwesome5 } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
+import { EvilIcons } from "@expo/vector-icons";
 const PastEvents = () => {
   return (
     <View style={styles.container}>
@@ -16,6 +18,26 @@ const PastEvents = () => {
             style={styles.image}
             resizeMode="cover"
           />
+          <View style={styles.eventDetails}>
+            <View style={styles.eventDateTime}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <FontAwesome5 name="calendar-alt" size={15} color="#cccccc" />
+                <Text style={{ fontSize: 15, color: "#cccccc", paddingLeft: 7 }}>
+                  01/01/24
+                </Text>
+              </View>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Feather name="watch" size={15} color="#dce0dd" />
+                <Text style={{ fontSize: 15, color: "#cccccc", paddingLeft: 7 }}>
+                  09:00
+                </Text>
+              </View>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <EvilIcons name="location" size={15} color="#cccccc" />
+              <Text style={{ fontSize: 15, color: "#cccccc" }}>Gymkhana Park</Text>
+            </View>
+          </View>
         </View>
         <View style={styles.imageContainer}>
           <Image
@@ -23,6 +45,26 @@ const PastEvents = () => {
             style={styles.image}
             resizeMode="cover"
           />
+          <View style={styles.eventDetails}>
+            <View style={styles.eventDateTime}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <FontAwesome5 name="calendar-alt" size={15} color="#cccccc" />
+                <Text style={{ fontSize: 15, color: "#cccccc", paddingLeft: 7 }}>
+                  01/01/24
+                </Text>
+              </View>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Feather name="watch" size={15} color="#dce0dd" />
+                <Text style={{ fontSize: 15, color: "#cccccc", paddingLeft: 7 }}>
+                  09:00
+                </Text>
+              </View>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <EvilIcons name="location" size={15} color="#cccccc" />
+              <Text style={{ fontSize: 15, color: "#cccccc" }}>Gymkhana Park</Text>
+            </View>
+          </View>
         </View>
         <View style={styles.imageContainer}>
           <Image
@@ -30,6 +72,26 @@ const PastEvents = () => {
             style={styles.image}
             resizeMode="cover"
           />
+          <View style={styles.eventDetails}>
+            <View style={styles.eventDateTime}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <FontAwesome5 name="calendar-alt" size={15} color="#cccccc" />
+                <Text style={{ fontSize: 15, color: "#cccccc", paddingLeft: 7 }}>
+                  01/01/24
+                </Text>
+              </View>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Feather name="watch" size={15} color="#dce0dd" />
+                <Text style={{ fontSize: 15, color: "#cccccc", paddingLeft: 7 }}>
+                  09:00
+                </Text>
+              </View>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <EvilIcons name="location" size={15} color="#cccccc" />
+              <Text style={{ fontSize: 15, color: "#cccccc" }}>Gymkhana Park</Text>
+            </View>
+          </View>
         </View>
         <View style={styles.imageContainer}>
           <Image
@@ -37,6 +99,26 @@ const PastEvents = () => {
             style={styles.image}
             resizeMode="cover"
           />
+          <View style={styles.eventDetails}>
+            <View style={styles.eventDateTime}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <FontAwesome5 name="calendar-alt" size={15} color="#cccccc" />
+                <Text style={{ fontSize: 15, color: "#cccccc", paddingLeft: 7 }}>
+                  01/01/24
+                </Text>
+              </View>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Feather name="watch" size={15} color="#dce0dd" />
+                <Text style={{ fontSize: 15, color: "#cccccc", paddingLeft: 7 }}>
+                  09:00
+                </Text>
+              </View>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <EvilIcons name="location" size={15} color="#cccccc" />
+              <Text style={{ fontSize: 15, color: "#cccccc" }}>Gymkhana Park</Text>
+            </View>
+          </View>
         </View>
         <View style={styles.imageContainer}>
           <Image
@@ -44,6 +126,26 @@ const PastEvents = () => {
             style={styles.image}
             resizeMode="cover"
           />
+          <View style={styles.eventDetails}>
+            <View style={styles.eventDateTime}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <FontAwesome5 name="calendar-alt" size={15} color="#cccccc" />
+                <Text style={{ fontSize: 15, color: "#cccccc", paddingLeft: 7 }}>
+                  01/01/24
+                </Text>
+              </View>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Feather name="watch" size={15} color="#dce0dd" />
+                <Text style={{ fontSize: 15, color: "#cccccc", paddingLeft: 7 }}>
+                  09:00
+                </Text>
+              </View>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <EvilIcons name="location" size={15} color="#cccccc" />
+              <Text style={{ fontSize: 15, color: "#cccccc" }}>Gymkhana Park</Text>
+            </View>
+          </View>
         </View>
         {/* Add more images as needed */}
       </ScrollView>
@@ -79,14 +181,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   imageContainer: {
-    height: 150,
+    height: 270,
     width: 300,
     marginHorizontal: 10,
+    backgroundColor: "white",
+    borderRadius: 10,
   },
   image: {
     width: "100%",
-    height: "100%",
-    borderRadius: 10,
+    height: 200,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+  },
+  eventDetails: {
+    padding: 10,
+  },
+  eventDateTime: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 });
 

@@ -19,7 +19,7 @@ const WelcomeScreen = ({ navigation }) => {
   useEffect(() => {
     loadFontsAsync();
     const timeout = setTimeout(() => {
-      navigation.replace("LoginScreen");
+      navigation.navigate("LoginSignUp");
     }, 3000);
 
     return () => clearTimeout(timeout);
@@ -37,7 +37,6 @@ const WelcomeScreen = ({ navigation }) => {
     >
       <Image style={styles.logo} source={require("../assets/icons/logo.png")} />
       <Text style={styles.headText}>NITS Event</Text>
-      <StatusBar backgroundColor="#960e05" />
     </ImageBackground>
   );
 };

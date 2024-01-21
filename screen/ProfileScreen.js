@@ -14,7 +14,7 @@ import { Feather } from "@expo/vector-icons";
 const ProfileScreen = ({navigation}) => {
   
   const handleLogin = () => {
-    navigation.replace("LoginScreen");
+    navigation.navigate("WelcomeScreen");
     console.log("Login pressed");
   };
   return (
