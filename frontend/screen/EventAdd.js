@@ -8,6 +8,8 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
+
+import axios from 'axios';
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as ImagePicker from "expo-image-picker";
 import { format } from "date-fns";
@@ -90,16 +92,26 @@ const EventAdd = ({navigation}) => {
   };
   
 
-  const handleSubmit = () => {
-    // Implement form submission logic here
-    // For simplicity, I'm just logging the form data
-    navigation.goBack();
-    console.log("Event Name:", eventName);
-    console.log("Description:", description);
-    console.log("Date:", formattedDate);
-    console.log("Time:", formattedTime);
-    console.log("Venue:", venue);
-    console.log("Image URI:", imageUri);
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post('http://192.168.211.171:3001/events', {
+          eventName,
+          description,
+          date,
+          time,
+          venue,
+          imageUri,
+      });
+  
+      if (response.status === 201) {
+        console.log('Success', 'Event added successfully');
+      } else {
+        console.error('Error', 'Failed to add event');
+      }
+    } catch (error) {
+      console.error('Error adding event:', error);
+      console.log('Error', 'Internal server error');
+    }
   };
 
   return (
