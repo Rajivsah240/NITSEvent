@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StatusBar, StyleSheet, Text, View } from 'react-native'
 import GradientBGIcon from './GradientBGIcon';
 import ProfilePic from './ProfilePic';
 
@@ -26,7 +26,8 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'space-between',
       borderBottomRightRadius:50,
-      borderBottomLeftRadius:50
+      borderBottomLeftRadius:50,
+      marginTop:StatusBar.currentHeight
     },
     HeaderText: {
       fontSize: 30,

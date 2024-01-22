@@ -13,7 +13,7 @@ const LoginScreen = ({navigation}) => {
   };
 
   const handleSignup = () => {
-    navigation.replace("Tab");
+    navigation.navigate("Tab");
     console.log("Login pressed");
   };
 

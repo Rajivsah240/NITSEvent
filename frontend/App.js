@@ -13,6 +13,8 @@ import LoginSignUp from './screen/LoginSignUp';
 import ClubLogin from './screen/ClubLogin';
 import ClubHomeScreen from './screen/ClubHomeScreen';
 import EventAdd from './screen/EventAdd';
+import ClubSignUpScreen from './screen/ClubSignUpScreen';
+import SignUpScreen from './screen/SignUpScreen';
 
 
 
@@ -27,7 +29,9 @@ const App = () => {
       <Stack.Navigator initialRouteName="WelcomeScreen" screenOptions={{headerShown: false}}>
         <Stack.Screen name="WelcomeScreen" component={WelcomeScreen}/>
         <Stack.Screen name="LoginSignUp" component={LoginSignUp}/>
+        <Stack.Screen name="SignUpScreen" component={SignUpScreen}/>
         <Stack.Screen name="LoginScreen" component={LoginScreen}/>
+        <Stack.Screen name="ClubSignUpScreen" component={ClubSignUpScreen}/>
         <Stack.Screen name='ClubLogin' component={ClubLogin}/>
         <Stack.Screen name='ClubHomeScreen' component={ClubHomeScreen}/>
         <Stack.Screen name='EventAdd' component={EventAdd}/>

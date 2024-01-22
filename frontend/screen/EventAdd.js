@@ -8,22 +8,20 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
+
+// import axios from 'axios';
+
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as ImagePicker from "expo-image-picker";
 import { format } from "date-fns";
 import * as Font from "expo-font";
+
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import { FIRESTORE_DB, app, storage } from "../config/firebase";
-import {
-  getStorage,
-  getFirestore,
-  addDoc,
-  collection,
-  getDownloadURL,
-  ref,
-  uploadBytes,
-} from "firebase/storage";
+
+import { FIRESTORE_DB, FIREBASE_APP } from "../config/firebase";
+import { getStorage, getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { getFirestore, addDoc, collection } from "firebase/firestore";
 import { Timestamp } from "firebase/firestore";
 
 const EventAdd = ({ navigation }) => {
@@ -37,8 +35,8 @@ const EventAdd = ({ navigation }) => {
   const [venue, setVenue] = useState("");
   const [image, setImage] = useState(null);
   const [imageURL, setImageURL] = useState("");
-  const [uploading, setUploading] = useState(false);
-  // const db = getFirestore(app);
+  const [uploaded,setUploaded] = useState(false);
+  // const db = getFirestore(FIREBASE_APP);
 
   const [formattedDate, setFormattedDate] = useState(
     format(date, "MMMM dd, yyyy")
@@ -87,36 +85,41 @@ const EventAdd = ({ navigation }) => {
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsEditing: true,
+        // aspect: [4, 3],
         quality: 1,
       });
 
       console.log("ImagePicker result:", result);
 
-      if (!result.cancelled) {
+      if (!result.canceled) {
         setImage(result.assets[0].uri);
+        console.log("Image URI set:", result.uri);
       }
     } catch (error) {
       console.error("ImagePicker error:", error);
     }
   };
-
   const uploadImage = async () => {
     try {
       const response = await fetch(image);
       const blob = await response.blob();
 
-      const storage = getStorage(app);
+      const storage = getStorage(FIREBASE_APP);
 
-      const storageRef = ref(storage, `Pictures/Image1`);
+      const uriComponents = image.split("/");
+      const imageName = uriComponents[uriComponents.length - 1];
+
+      const storageRef = ref(storage, `EventPictures/${imageName}`);
       const snapshot = await uploadBytes(storageRef, blob);
 
       const url = await getDownloadURL(snapshot.ref);
 
       console.log("Download URL: ", url);
       setImageURL(url);
+      setUploaded(true);
       console.log(imageURL);
     } catch (error) {
-      console.error(error);
+      console.error("upload error: ", error);
     }
   };
 
@@ -128,12 +131,12 @@ const EventAdd = ({ navigation }) => {
         date: Timestamp.fromDate(date),
         time: Timestamp.fromDate(time),
         venue,
-        imageUrl: imageURL,
+        imageURL,
       });
-
       console.log("Document written with ID: ", docRef.id);
+      navigation.navigate("ClubHomeScreen");
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
 
@@ -163,15 +166,16 @@ const EventAdd = ({ navigation }) => {
         style={styles.imageUploadButton}
         onPress={handleImageUpload}
       >
-        <Text style={styles.imageUploadText}>Upload Image</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={uploadImage}>
-        <Text>Upload Image</Text>
+        <Text style={styles.imageUploadText}>Pick an Image</Text>
       </TouchableOpacity>
 
       {image && (
         <View style={{ alignItems: "center" }}>
           <Image source={{ uri: image }} style={styles.imagePreview} />
+          <TouchableOpacity style={{backgroundColor:'blue',marginVertical:5}} onPress={uploadImage}>
+            <Text>Upload Image</Text>
+
+          </TouchableOpacity>
         </View>
       )}
 
@@ -179,7 +183,6 @@ const EventAdd = ({ navigation }) => {
         <Text style={styles.selectedDateTime}>{formattedDate}</Text>
         <TouchableOpacity onPress={() => setShowDatePicker(true)}>
           <AntDesign name="calendar" size={20} color="black" />
-          {/* <Text style={styles.datePickerText}>Select Date</Text> */}
         </TouchableOpacity>
       </View>
 
@@ -209,7 +212,7 @@ const EventAdd = ({ navigation }) => {
         onChangeText={setVenue}
       />
 
-      <Button title="Submit" onPress={handleSubmit} />
+      {uploaded?<Button title="Submit" onPress={handleSubmit} />:<Button disabled={true} title="Submit" onPress={handleSubmit} />}
     </View>
   );
 };
@@ -219,6 +222,7 @@ const styles = StyleSheet.create({
     padding: 30,
     backgroundColor: "#f4f5ff",
     height: "100%",
+    marginTop:20
   },
   headerText: {
     fontSize: 30,
