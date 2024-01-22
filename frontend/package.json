@@ -36,7 +36,8 @@
     "react-native-splash-screen": "^3.3.0",
     "react-native-vector-icons": "^10.0.3",
     "react-navigation": "^5.0.0",
-    "zustand": "^4.4.7"
+    "zustand": "^4.4.7",
+    "firebase": "10.7.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

@@ -8,17 +8,25 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-
-import axios from 'axios';
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as ImagePicker from "expo-image-picker";
 import { format } from "date-fns";
 import * as Font from "expo-font";
-
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import { FIRESTORE_DB, app, storage } from "../config/firebase";
+import {
+  getStorage,
+  getFirestore,
+  addDoc,
+  collection,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
+import { Timestamp } from "firebase/firestore";
 
-const EventAdd = ({navigation}) => {
+const EventAdd = ({ navigation }) => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [eventName, setEventName] = useState("");
   const [description, setDescription] = useState("");
@@ -27,7 +35,10 @@ const EventAdd = ({navigation}) => {
   const [time, setTime] = useState(new Date());
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [venue, setVenue] = useState("");
-  const [imageUri, setImageUri] = useState(null);
+  const [image, setImage] = useState(null);
+  const [imageURL, setImageURL] = useState("");
+  const [uploading, setUploading] = useState(false);
+  // const db = getFirestore(app);
 
   const [formattedDate, setFormattedDate] = useState(
     format(date, "MMMM dd, yyyy")
@@ -76,41 +87,53 @@ const EventAdd = ({navigation}) => {
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsEditing: true,
-        // aspect: [4, 3],
         quality: 1,
       });
-  
+
       console.log("ImagePicker result:", result);
-  
-      if (!result.canceled) {
-        setImageUri(result.assets[0].uri);
-        console.log("Image URI set:", result.uri);
+
+      if (!result.cancelled) {
+        setImage(result.assets[0].uri);
       }
     } catch (error) {
       console.error("ImagePicker error:", error);
     }
   };
-  
+
+  const uploadImage = async () => {
+    try {
+      const response = await fetch(image);
+      const blob = await response.blob();
+
+      const storage = getStorage(app);
+
+      const storageRef = ref(storage, `Pictures/Image1`);
+      const snapshot = await uploadBytes(storageRef, blob);
+
+      const url = await getDownloadURL(snapshot.ref);
+
+      console.log("Download URL: ", url);
+      setImageURL(url);
+      console.log(imageURL);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post('http://192.168.211.171:3001/events', {
-          eventName,
-          description,
-          date,
-          time,
-          venue,
-          imageUri,
+      const docRef = await addDoc(collection(FIRESTORE_DB, "event"), {
+        eventName,
+        description,
+        date: Timestamp.fromDate(date),
+        time: Timestamp.fromDate(time),
+        venue,
+        imageUrl: imageURL,
       });
-  
-      if (response.status === 201) {
-        console.log('Success', 'Event added successfully');
-      } else {
-        console.error('Error', 'Failed to add event');
-      }
+
+      console.log("Document written with ID: ", docRef.id);
     } catch (error) {
-      console.error('Error adding event:', error);
-      console.log('Error', 'Internal server error');
+      console.error(error);
     }
   };
 
@@ -142,9 +165,14 @@ const EventAdd = ({navigation}) => {
       >
         <Text style={styles.imageUploadText}>Upload Image</Text>
       </TouchableOpacity>
+      <TouchableOpacity onPress={uploadImage}>
+        <Text>Upload Image</Text>
+      </TouchableOpacity>
 
-      {imageUri && (
-        <View style={{alignItems :'center'}}><Image source={{ uri: imageUri }} style={styles.imagePreview} /></View>
+      {image && (
+        <View style={{ alignItems: "center" }}>
+          <Image source={{ uri: image }} style={styles.imagePreview} />
+        </View>
       )}
 
       <View style={styles.dateTimePickerButton}>
@@ -166,7 +194,12 @@ const EventAdd = ({navigation}) => {
       </View>
 
       {showTimePicker && (
-        <DateTimePicker value={time} mode="time" is24Hour={false} onChange={handleTimeChange} />
+        <DateTimePicker
+          value={time}
+          mode="time"
+          is24Hour={false}
+          onChange={handleTimeChange}
+        />
       )}
 
       <TextInput
@@ -214,7 +247,7 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     resizeMode: "contain",
-    marginVertical:10
+    marginVertical: 10,
   },
   dateTimePickerButton: {
     flexDirection: "row",
@@ -224,7 +257,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginHorizontal: 70,
     marginBottom: 10,
-    paddingVertical:3,
+    paddingVertical: 3,
     borderRadius: 5,
   },
   datePickerText: {
