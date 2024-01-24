@@ -1,20 +1,23 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity } from "react-native";
-import { Feather } from "@expo/vector-icons"; // Import an icon library (assuming Feather in this case)
+import React, { useState,useEffect } from "react";
+import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Alert } from "react-native";
+import { Feather } from "@expo/vector-icons";
 import { AntDesign } from '@expo/vector-icons';
+import { useAuth } from "../AuthContext";
 const LoginScreen = ({navigation}) => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const { loginStudent, loggedIn } = useAuth();
 
-  const handleLogin = () => {
-    navigation.navigate("Tab");
-    console.log("Login pressed");
-  };
 
-  const handleSignup = () => {
-    navigation.navigate("Tab");
-    console.log("Login pressed");
+  useEffect(() => {
+    if (loggedIn) {
+      navigation.navigate("Tab");
+    }
+  }, [loggedIn]);
+
+  const handleLogin = async () => {
+    await loginStudent({ email, password });
   };
 
   const togglePasswordVisibility = () => {
@@ -24,16 +27,20 @@ const LoginScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
-        <Image style={styles.logo} source={require("../assets/icons/logo.png")} />
+        <Image
+          style={styles.logo}
+          source={require("../assets/icons/logo.png")}
+        />
         <Text style={styles.title}>Account Login</Text>
       </View>
 
       <View style={styles.formContainer}>
         <TextInput
           style={styles.input}
-          placeholder="Username"
-          onChangeText={(text) => setUsername(text)}
-          value={username}
+          placeholder="Email"
+          onChangeText={(text) => setEmail(text)}
+          value={email}
+          keyboardType="email-address"
         />
         <View style={styles.passwordInputContainer}>
           <TextInput
@@ -43,7 +50,10 @@ const LoginScreen = ({navigation}) => {
             onChangeText={(text) => setPassword(text)}
             value={password}
           />
-          <TouchableOpacity style={styles.toggleButton} onPress={togglePasswordVisibility}>
+          <TouchableOpacity
+            style={styles.toggleButton}
+            onPress={togglePasswordVisibility}
+          >
             <Feather
               name={showPassword ? "eye-off" : "eye"}
               size={24}
@@ -55,12 +65,13 @@ const LoginScreen = ({navigation}) => {
         <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
-
+        
         <TouchableOpacity style={styles.googleButton} onPress={() => {}}>
           <AntDesign  name="google" size={24} color="#dd4b39" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleSignup}>
-          <Text style={{color:'#71bbde'}}>New Here ? Click Here to SignUp First.</Text>
+
+        <TouchableOpacity onPress={() => navigation.navigate("SignUpScreen")}>
+          <Text style={{color:'#71bbde'}}>New Here? Click Here to Sign Up First.</Text>
         </TouchableOpacity>
       </View>
     </View>

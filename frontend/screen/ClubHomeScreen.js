@@ -1,59 +1,135 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import HeaderBar from '../components/HeaderBar';
+import React, { useEffect, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 
-const ClubHomeScreen = ({navigation}) => {
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
+import HeaderBar from "../components/HeaderBar";
+
+import { FIRESTORE_DB } from "../config/firebase";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import YourEvents from "../clubComponents/YourEvents";
+import { useAuth } from "../AuthContext";
+
+const ClubHomeScreen = ({ navigation }) => {
   const [showAddEvent, setShowAddEvent] = useState(false);
 
   const handleAddEventPress = () => {
     setShowAddEvent(!showAddEvent);
   };
 
-  const handleAddEvent=()=>{
+  const handleAddEvent = () => {
     navigation.navigate("EventAdd");
-  }
+  };
+  const handleSignOut = () => {
+    // Navigate to the WelcomeScreen
+    navigation.navigate("WelcomeScreen");
+  };
+
+  const [events, setEvents] = useState([]);
+  const { user } = useAuth();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchEvents = async () => {
+        try {
+          const q = query(
+            collection(FIRESTORE_DB, "event"),
+            where("uid", "==", user.uid)
+          );
+          const querySnapshot = await getDocs(q);
+
+          const fetchedEvents = [];
+          querySnapshot.forEach((doc) => {
+            fetchedEvents.push(doc.data());
+          });
+
+          setEvents(fetchedEvents);
+        } catch (error) {
+          console.error("Error fetching events: ", error);
+        }
+      };
+
+      fetchEvents();
+    }, [user]) // Dependency array for useCallback
+  );
 
   return (
-    <View style={styles.container}>
-      <HeaderBar />
+    <>
+      <ScrollView>
+        <View style={styles.container}>
+          <HeaderBar onSignOut={handleSignOut} />
+
+          <View style={styles.listCard}>
+            <Text style={styles.text}>Your Events</Text>
+            
+            {events.length > 0 ? (
+              events.map((item) => (
+                <YourEvents key={item.id} event={item} />
+              ))
+            ) : (
+              <Text>No events found.</Text>
+            )}
+          </View>
+        </View>
+      </ScrollView>
       {showAddEvent && (
         <TouchableOpacity style={styles.addButton} onPress={handleAddEvent}>
           <Text style={styles.addEventText}>Add an Event</Text>
         </TouchableOpacity>
       )}
 
-      <TouchableOpacity style={styles.floatingButton} onPress={handleAddEventPress}>
-        <Text style={styles.buttonText}>{showAddEvent ? '  x  ' : '  +  '}</Text>
+      <TouchableOpacity
+        style={styles.floatingButton}
+        onPress={handleAddEventPress}
+      >
+        <Text style={styles.buttonText}>
+          {showAddEvent ? "  x  " : "  +  "}
+        </Text>
       </TouchableOpacity>
-    </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#f4f5ff",
+  },
+  listCard: {
+    marginTop: 10,
+    alignItems: "center",
+  },
+  text: {
+    fontSize: 26,
+    paddingBottom: 12,
+    fontWeight: "bold",
   },
   addButton: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 80,
     right: 20,
-    backgroundColor: '#96bcfa',
+    backgroundColor: "#96bcfa",
     padding: 10,
     borderRadius: 5,
   },
   addEventText: {
-    color: 'white',
+    color: "white",
   },
   floatingButton: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 25,
     right: 20,
-    backgroundColor: '#96bcfa',
+    backgroundColor: "#96bcfa",
     padding: 15,
     borderRadius: 50,
   },
   buttonText: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
   },
 });

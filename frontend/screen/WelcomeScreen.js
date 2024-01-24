@@ -2,7 +2,7 @@ import React, { useEffect,useState } from "react";
 import { View, Text, StyleSheet, ImageBackground, Image } from "react-native";
 import * as Font from 'expo-font';
 import { StatusBar } from "expo-status-bar";
-
+import { useFocusEffect } from "@react-navigation/native";
 
 const WelcomeScreen = ({ navigation }) => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -18,12 +18,18 @@ const WelcomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     loadFontsAsync();
-    const timeout = setTimeout(() => {
-      navigation.navigate("LoginSignUp");
-    }, 3000);
+  }, []);
 
-    return () => clearTimeout(timeout);
-  }, [navigation]);
+  useFocusEffect(
+    React.useCallback(() => {
+      loadFontsAsync();
+      const timeout = setTimeout(() => {
+        navigation.navigate("LoginSignUp");
+      }, 3000);
+
+      return () => clearTimeout(timeout);
+    }, [navigation])
+  );
 
 
   if (!fontsLoaded) {

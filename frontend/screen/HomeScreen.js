@@ -1,29 +1,26 @@
-import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-
-
-import { LinearGradient } from "expo-linear-gradient";
 import Calendar from "../components/Calendar";
 import HeaderEvent from "../components/HeaderEvent";
 import HeaderBar from "../components/HeaderBar";
 import UpcomingEvents from "../components/UpcomingEvents";
 import PastEvents from "../components/PastEvents";
-import Clubs from "../components/Clubs";
+import Clubs from "./Clubs";
 
 const HomeScreen = () => {
   const [selectedDate, setSelectedDate] = useState(null);
-
+  const handleSignOut = () => {
+    // Navigate to the WelcomeScreen
+    navigation.navigate('WelcomeScreen');
+  };
   return (
     <ScrollView>
       <View style={styles.mainContainer}>
-        <HeaderBar />
+        <HeaderBar onSignOut={handleSignOut} />
         <HeaderEvent />
         <View style={styles.container}>
           <Calendar onSelectDate={setSelectedDate} selected={selectedDate} />
-          {/* <StatusBar style="auto" /> */}
         </View>
-        
         <UpcomingEvents />
         <PastEvents />
         <Clubs />

@@ -16,7 +16,12 @@ import EventAdd from './screen/EventAdd';
 import ClubSignUpScreen from './screen/ClubSignUpScreen';
 import SignUpScreen from './screen/SignUpScreen';
 
-
+import { AuthProvider } from './AuthContext';
+import DetailScreenStudent from './screen/DetailScreenStudent';
+import EventRegistrationScreen from './screen/EventRegistrationScreen';
+import RegisteredEvents from './screen/RegisteredEvents';
+import ClubDetails from './screen/ClubDetails';
+import Clubs from './screen/Clubs';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,17 +29,23 @@ const App = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* <StatusBar hidden={true}/> */}
+    <AuthProvider>
     <NavigationContainer>
       <Stack.Navigator initialRouteName="WelcomeScreen" screenOptions={{headerShown: false}}>
         <Stack.Screen name="WelcomeScreen" component={WelcomeScreen}/>
         <Stack.Screen name="LoginSignUp" component={LoginSignUp}/>
         <Stack.Screen name="SignUpScreen" component={SignUpScreen}/>
         <Stack.Screen name="LoginScreen" component={LoginScreen}/>
+        <Stack.Screen name="EventScreen" component={EventScreen}/>
+        <Stack.Screen name="EventRegistrationScreen" component={EventRegistrationScreen}/>
+        <Stack.Screen name="DetailScreenStudent" component={DetailScreenStudent} />
         <Stack.Screen name="ClubSignUpScreen" component={ClubSignUpScreen}/>
+        <Stack.Screen name="RegisteredEvents" component={RegisteredEvents}/>
         <Stack.Screen name='ClubLogin' component={ClubLogin}/>
         <Stack.Screen name='ClubHomeScreen' component={ClubHomeScreen}/>
         <Stack.Screen name='EventAdd' component={EventAdd}/>
+        <Stack.Screen name="ClubDetails" component={ClubDetails}/>
+        <Stack.Screen name="Club" component={Clubs}/>
         <Stack.Screen
           name="Tab"
           component={TabNavigator}
@@ -52,6 +63,7 @@ const App = () => {
       </Stack.Navigator>
       
     </NavigationContainer>
+    </AuthProvider>
     </SafeAreaView>
   );
 };
@@ -61,7 +73,7 @@ const App = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // paddingTop:25,
+    // marginTop:10,
     backgroundColor:'#f4f5ff',
   },
 });

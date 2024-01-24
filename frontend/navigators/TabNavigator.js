@@ -11,6 +11,7 @@ import { BlurView } from 'expo-blur';
 
 import { AntDesign } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
+import DetailScreenStudent from "../screen/DetailScreenStudent";
 
 
 const Tab = createBottomTabNavigator();
@@ -60,6 +61,7 @@ const TabNavigator = () => {
           ),
         }}
       ></Tab.Screen>
+      {/* <Tab.Screen name="DetailScreenStudent" options={{ tabBarVisible:false,tabBarIconStyle:{display:"none"} }} component={DetailScreenStudent}/> */}
     </Tab.Navigator>
   );
 };

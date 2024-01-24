@@ -1,12 +1,14 @@
 import React from 'react';
 import {StyleSheet, Image, View} from 'react-native';
+import { useAuth } from "../AuthContext";
 
 
 const ProfilePic = () => {
+  const {loggedIn,user} = useAuth();
   return (
     <View style={styles.ImageContainer}>
       <Image
-        source={require('../assets/images/avatar.jpg')}
+        source={{uri:loggedIn?user.imageURL:"https://commondatastorage.googleapis.com/codeskulptor-assets/space%20station.png"}}
         style={styles.Image}
       />
     </View>

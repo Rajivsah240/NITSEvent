@@ -7,6 +7,7 @@ import {
   Button,
   Image,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 
 // import axios from 'axios';
@@ -23,9 +24,11 @@ import { FIRESTORE_DB, FIREBASE_APP } from "../config/firebase";
 import { getStorage, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { getFirestore, addDoc, collection } from "firebase/firestore";
 import { Timestamp } from "firebase/firestore";
+import { useAuth } from "../AuthContext";
 
 const EventAdd = ({ navigation }) => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  const [clubName, setClubName] = useState("");
   const [eventName, setEventName] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState(new Date());
@@ -36,7 +39,8 @@ const EventAdd = ({ navigation }) => {
   const [image, setImage] = useState(null);
   const [imageURL, setImageURL] = useState("");
   const [uploaded,setUploaded] = useState(false);
-  // const db = getFirestore(FIREBASE_APP);
+  
+  const {user} =useAuth();
 
   const [formattedDate, setFormattedDate] = useState(
     format(date, "MMMM dd, yyyy")
@@ -66,7 +70,6 @@ const EventAdd = ({ navigation }) => {
     setShowDatePicker(false);
     if (selectedDate) {
       setDate(selectedDate);
-
       setFormattedDate(format(selectedDate, "MMMM dd, yyyy"));
     }
   };
@@ -126,6 +129,8 @@ const EventAdd = ({ navigation }) => {
   const handleSubmit = async () => {
     try {
       const docRef = await addDoc(collection(FIRESTORE_DB, "event"), {
+        uid:user.uid,
+        clubName,
         eventName,
         description,
         date: Timestamp.fromDate(date),
@@ -141,6 +146,7 @@ const EventAdd = ({ navigation }) => {
   };
 
   return (
+    <ScrollView>
     <View style={styles.container}>
       <View style={{ alignItems: "center" }}>
         <Text style={styles.headerText}>Add Event</Text>
@@ -160,6 +166,12 @@ const EventAdd = ({ navigation }) => {
         numberOfLines={4}
         value={description}
         onChangeText={setDescription}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Club Name"
+        value={clubName}
+        onChangeText={setClubName}
       />
 
       <TouchableOpacity
@@ -213,7 +225,7 @@ const EventAdd = ({ navigation }) => {
       />
 
       {uploaded?<Button title="Submit" onPress={handleSubmit} />:<Button disabled={true} title="Submit" onPress={handleSubmit} />}
-    </View>
+    </View></ScrollView>
   );
 };
 
