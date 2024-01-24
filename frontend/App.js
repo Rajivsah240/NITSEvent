@@ -23,6 +23,7 @@ import RegisteredEvents from './screen/RegisteredEvents';
 import ClubDetails from './screen/ClubDetails';
 import Clubs from './screen/Clubs';
 
+
 const Stack = createNativeStackNavigator();
 
 const App = () => {
@@ -37,6 +38,8 @@ const App = () => {
         <Stack.Screen name="SignUpScreen" component={SignUpScreen}/>
         <Stack.Screen name="LoginScreen" component={LoginScreen}/>
         <Stack.Screen name="EventScreen" component={EventScreen}/>
+        <Stack.Screen name="Clubs" component={Clubs}/>
+        <Stack.Screen name="ClubDetails" component={ClubDetails}/>
         <Stack.Screen name="EventRegistrationScreen" component={EventRegistrationScreen}/>
         <Stack.Screen name="DetailScreenStudent" component={DetailScreenStudent} />
         <Stack.Screen name="ClubSignUpScreen" component={ClubSignUpScreen}/>
@@ -44,8 +47,6 @@ const App = () => {
         <Stack.Screen name='ClubLogin' component={ClubLogin}/>
         <Stack.Screen name='ClubHomeScreen' component={ClubHomeScreen}/>
         <Stack.Screen name='EventAdd' component={EventAdd}/>
-        <Stack.Screen name="ClubDetails" component={ClubDetails}/>
-        <Stack.Screen name="Club" component={Clubs}/>
         <Stack.Screen
           name="Tab"
           component={TabNavigator}

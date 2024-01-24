@@ -4,7 +4,7 @@ import { FlatList } from "react-native";
 import { FIRESTORE_DB } from "../config/firebase";
 import { collection, getDocs } from "firebase/firestore";
 
-const Clubs = ({navigation}) => {
+const Clubs = ({ navigation }) => {
   const [clubs, setClubs] = useState([]);
 
   useEffect(() => {
@@ -22,6 +22,7 @@ const Clubs = ({navigation}) => {
         });
 
         setClubs(fetchedClubs);
+        console.log('Navigation prop in Clubs:', navigation);
       } catch (error) {
         console.error("Error fetching clubs: ", error);
       }
@@ -30,16 +31,16 @@ const Clubs = ({navigation}) => {
     fetchClubs();
   }, []);
 
-  const renderClubImage = ({ item }) => (
-    <TouchableOpacity
-      onPress={() => navigation.navigate("ClubDetails", { item })}
-    >
-      <View style={styles.clubImageContainer}>
-        <Image source={{ uri: item.imageURL }} style={styles.clubImage} />
-        <Text style={styles.clubText}>{item.clubName}</Text>
-      </View>
-    </TouchableOpacity>
-  );
+  // const renderClubImage = ({ item }) => (
+  //   <TouchableOpacity
+  //     onPress={() => navigation.navigate("ClubDetails", { item })}
+  //   >
+  //     <View style={styles.clubImageContainer}>
+  //       <Image source={{ uri: item.imageURL }} style={styles.clubImage} />
+  //       <Text style={styles.clubText}>{item.clubName}</Text>
+  //     </View>
+  //   </TouchableOpacity>
+  // );
 
   return (
     <View style={styles.container}>
@@ -48,7 +49,16 @@ const Clubs = ({navigation}) => {
         <FlatList
           data={clubs}
           keyExtractor={(item) => item.id}
-          renderItem={renderClubImage}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() =>{
+              navigation.navigate("ClubDetails", { item })}}
+            >
+              <View style={styles.clubImageContainer}>
+                <Image source={{ uri: item.imageURL }} style={styles.clubImage} />
+                <Text style={styles.clubText}>{item.clubName}</Text>
+              </View>
+            </TouchableOpacity>)}
           numColumns={3}
         />
       </View>

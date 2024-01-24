@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from "react";
 import {  StyleSheet,  Text,  View,  Image,  TouchableOpacity,  ScrollView,} from "react-native";
 
-const ClubDetails = ({ route }) => {
+const ClubDetails = ({ navigation,route }) => {
   const { item } = route.params;
   return (
     <ScrollView style={styles.container}>

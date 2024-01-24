@@ -7,14 +7,17 @@ import UpcomingEvents from "../components/UpcomingEvents";
 import PastEvents from "../components/PastEvents";
 import Clubs from "./Clubs";
 
-const HomeScreen = () => {
+
+
+const HomeScreen = ({navigation}) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const handleSignOut = () => {
-    // Navigate to the WelcomeScreen
+    console.log('Navigation prop in Clubs:', navigation);
     navigation.navigate('WelcomeScreen');
   };
   return (
     <ScrollView>
+      
       <View style={styles.mainContainer}>
         <HeaderBar onSignOut={handleSignOut} />
         <HeaderEvent />
