@@ -70,10 +70,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
+    color:'#A9B2B6'
   },
   dateSection: {
     width: '100%',
     padding: 8,
+    
   },
   scroll: {
     // height: 150,

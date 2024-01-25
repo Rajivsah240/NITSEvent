@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {View,Text,TextInput,StyleSheet,Button,TouchableOpacity,Image,Alert} from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import {FIREBASE_AUTH, FIRESTORE_DB, FIREBASE_APP} from "../config/firebase";
@@ -6,9 +6,7 @@ import {FIREBASE_AUTH, FIRESTORE_DB, FIREBASE_APP} from "../config/firebase";
 import { getStorage, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { createUserWithEmailAndPassword,getAuth } from "firebase/auth";
 import { doc,setDoc } from "firebase/firestore";
-
-
-
+import * as Font from "expo-font";
 
 const SignUpScreen = ({navigation}) => {
   const [name, setname] = useState("");
@@ -20,6 +18,26 @@ const SignUpScreen = ({navigation}) => {
 
   const [imageURL, setImageURL] = useState("");
   const [uploaded, setUploaded] = useState(false);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+  let customFonts = {
+    Convergence: require("../assets/fonts/Convergence-Regular.ttf"),
+    Monoton: require("../assets/fonts/Monoton-Regular.ttf"),
+    Teko: require("../assets/fonts/Teko-VariableFont_wght.ttf"),
+    TekoSemiBold: require("../assets/fonts/Teko-SemiBold.ttf"),
+    TekoMedium: require("../assets/fonts/Teko-Medium.ttf"),
+  };
+  const loadFontsAsync = async () => {
+    await Font.loadAsync(customFonts);
+    setFontsLoaded(true);
+  };
+
+  useEffect(() => {
+    loadFontsAsync();
+  }, []);
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   const handleImageUpload = async () => {
     try {
@@ -100,12 +118,14 @@ const SignUpScreen = ({navigation}) => {
       <Text style={styles.title}>Student Sign Up</Text>
       <TextInput
         placeholder="Name"
+        placeholderTextColor={"#A9B2B6"}
         onChangeText={setname}
         value={name}
         style={styles.input}
       />
       <TextInput
         placeholder="Email"
+        placeholderTextColor={"#A9B2B6"}
         onChangeText={setemail}
         value={email}
         style={styles.input}
@@ -113,6 +133,7 @@ const SignUpScreen = ({navigation}) => {
       />
       <TextInput
         placeholder="Password"
+        placeholderTextColor={"#A9B2B6"}
         onChangeText={setPassword}
         value={password}
         style={styles.input}
@@ -120,6 +141,7 @@ const SignUpScreen = ({navigation}) => {
       />
       <TextInput
         placeholder="Confirm Password"
+        placeholderTextColor={"#A9B2B6"}
         onChangeText={setConfirmPassword}
         value={confirmPassword}
         style={styles.input}
@@ -143,7 +165,10 @@ const SignUpScreen = ({navigation}) => {
           </TouchableOpacity>
         </View>
       )}
-      <Button title="Sign Up" onPress={handleSignUp} />
+      
+      <TouchableOpacity style={styles.signupBtn} onPress={handleSignUp}>
+          <Text style={styles.buttonText}>Sign Up</Text>
+        </TouchableOpacity>
     </View>
   );
 };
@@ -154,35 +179,55 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 20,
+    backgroundColor:'#102733'
   },
   title: {
-    fontSize: 24,
+    fontSize: 30,
     marginBottom: 20,
+    color:"#A9B2B6",
+    fontFamily:'TekoSemiBold'
   },
   input: {
     width: "100%",
     height: 40,
-    borderColor: "gray",
+    borderColor: "#FCCD00",
     borderWidth: 1,
     marginBottom: 20,
     paddingLeft: 10,
     borderRadius: 20,
+    color:'#A9B2B6'
   },
   imageUploadButton: {
-    backgroundColor: "blue",
+    backgroundColor: "#283F4D",
     padding: 10,
     borderRadius: 5,
     marginBottom: 20,
   },
   imageUploadText: {
-    color: "white",
+    color: "#FCCD00",
     textAlign: "center",
+    fontFamily:'Convergence'
   },
   imagePreview: {
     width: 50,
     height: 50,
     resizeMode: "contain",
     marginVertical: 10,
+  },
+  signupBtn: {
+    backgroundColor: "#FCCD00",
+    padding: 10,
+    width:"50%",
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent:'center',
+    marginBottom: 10,
+  },
+
+  buttonText: {
+    color: "black",
+    fontSize: 16,
+    fontFamily:'Convergence'
   },
 });
 

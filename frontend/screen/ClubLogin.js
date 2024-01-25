@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
+import * as Font from "expo-font";
 
 import { useAuth } from "../AuthContext";
 const ClubLogin = ({ navigation }) => {
@@ -18,13 +19,29 @@ const ClubLogin = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const { loginClub, loggedIn } = useAuth();
-
-
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+  let customFonts = {
+    Convergence: require("../assets/fonts/Convergence-Regular.ttf"),
+    Monoton: require("../assets/fonts/Monoton-Regular.ttf"),
+    Teko: require("../assets/fonts/Teko-VariableFont_wght.ttf"),
+    TekoSemiBold: require("../assets/fonts/Teko-SemiBold.ttf"),
+    TekoMedium: require("../assets/fonts/Teko-Medium.ttf"),
+  };
+  const loadFontsAsync = async () => {
+    await Font.loadAsync(customFonts);
+    setFontsLoaded(true);
+  };
+ 
+  
   useEffect(() => {
     if (loggedIn) {
       navigation.navigate("ClubHomeScreen");
     }
+    loadFontsAsync();
   }, [loggedIn]);
+  if (!fontsLoaded) {
+    return null;
+  }
 
   const handleLogin = async () => {
     await loginClub({ email, password });
@@ -48,6 +65,7 @@ const ClubLogin = ({ navigation }) => {
         <TextInput
           style={styles.input}
           placeholder="Email"
+          placeholderTextColor={"#A9B2B6"}
           onChangeText={(text) => setEmail(text)}
           value={email}
           keyboardType="email-address"
@@ -56,6 +74,7 @@ const ClubLogin = ({ navigation }) => {
           <TextInput
             style={styles.passwordInput}
             placeholder="Password"
+            placeholderTextColor={"#A9B2B6"}
             secureTextEntry={!showPassword}
             onChangeText={(text) => setPassword(text)}
             value={password}
@@ -83,7 +102,7 @@ const ClubLogin = ({ navigation }) => {
         <TouchableOpacity
           onPress={() => navigation.navigate("ClubSignUpScreen")}
         >
-          <Text style={{ color: "#71bbde" }}>
+          <Text style={{ color: "#71bbde",fontFamily:'Teko',fontSize:20 }}>
             New Here? Click Here to Sign Up First.
           </Text>
         </TouchableOpacity>
@@ -97,7 +116,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     paddingHorizontal: 20,
-    backgroundColor: "#fff",
+    backgroundColor: "#102733",
   },
   logoContainer: {
     alignItems: "center",
@@ -109,56 +128,62 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     marginTop: 10,
+    color:'#A9B2B6',
+    fontFamily:'TekoSemiBold'
   },
   formContainer: {
     marginTop: 20,
-    alignItems: "center",
+    alignItems:'center'
   },
   input: {
-    width: "100%",
+    width:'100%',
     height: 40,
-    borderColor: "gray",
+    borderColor: "#FCCD00",
     borderWidth: 1,
     marginBottom: 20,
     paddingLeft: 10,
     borderRadius: 20,
+    color:'#A9B2B6'
   },
   passwordInputContainer: {
     flexDirection: "row",
     alignItems: "center",
+    
   },
   passwordInput: {
     flex: 1,
     height: 40,
-    borderColor: "gray",
+    borderColor: "#FCCD00",
     borderWidth: 1,
     marginBottom: 20,
     paddingLeft: 10,
     borderRadius: 20,
+    color:'#A9B2B6'
   },
   toggleButton: {
     marginLeft: -25,
-    top: -10,
-    left: -10,
+    top:-10,
+    left:-10
   },
   loginButton: {
-    backgroundColor: "#f4f5ff",
+    backgroundColor: "#FCCD00",
     padding: 10,
-    width: "50%",
+    width:"50%",
     borderRadius: 20,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent:'center',
     marginBottom: 10,
   },
   googleButton: {
+    // backgroundColor: "#dd4b39",
     padding: 10,
     borderRadius: 5,
     alignItems: "center",
-    marginTop: 10,
   },
   buttonText: {
     color: "black",
     fontSize: 16,
+    fontFamily:'Convergence'
   },
 });
 

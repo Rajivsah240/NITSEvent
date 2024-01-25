@@ -8,11 +8,27 @@ import { Octicons } from '@expo/vector-icons';
 import { FIRESTORE_DB } from "../config/firebase";
 import { collection, getDocs, where, query, getFirestore, Timestamp, orderBy } from "firebase/firestore";
 import { parseISO, format } from 'date-fns';
+import * as Font from "expo-font";
 
 const UpcomingEvents = () => {
   const [events, setEvents] = useState([]);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+  let customFonts = {
+    Convergence: require("../assets/fonts/Convergence-Regular.ttf"),
+    Monoton: require("../assets/fonts/Monoton-Regular.ttf"),
+    Teko: require("../assets/fonts/Teko-VariableFont_wght.ttf"),
+    TekoSemiBold: require("../assets/fonts/Teko-SemiBold.ttf"),
+    TekoMedium: require("../assets/fonts/Teko-Medium.ttf"),
+  };
+  const loadFontsAsync = async () => {
+    await Font.loadAsync(customFonts);
+    setFontsLoaded(true);
+  };
 
+  
+  
   useEffect(() => {
+    loadFontsAsync();
     const fetchEvents = async () => {
       try {
         
@@ -20,29 +36,33 @@ const UpcomingEvents = () => {
         
         // Get the current date and time
         const currentDate = Timestamp.now();
-
+        
         // Create a query to filter out past events
         const q = query(
           eventsCollection,
           where("date", ">", currentDate),
           orderBy("date", "asc")  // You can order by date if needed
-        );
-
-        const querySnapshot = await getDocs(q);
-
-        const fetchedEvents = [];
-        querySnapshot.forEach((doc) => {
-          fetchedEvents.push({ id: doc.id, ...doc.data() });
-        });
-
-        setEvents(fetchedEvents);
-      } catch (error) {
-        console.error("Error fetching events:", error);
-      }
-    };
-
-    fetchEvents();
-  }, []);
+          );
+          
+          const querySnapshot = await getDocs(q);
+          
+          const fetchedEvents = [];
+          querySnapshot.forEach((doc) => {
+            fetchedEvents.push({ id: doc.id, ...doc.data() });
+          });
+          
+          setEvents(fetchedEvents);
+        } catch (error) {
+          console.error("Error fetching events:", error);
+        }
+      };
+      
+      fetchEvents();
+    }, []);
+    
+    if (!fontsLoaded) {
+      return null;
+    }
 
   return (
     <View style={styles.container}>
@@ -59,31 +79,31 @@ const UpcomingEvents = () => {
               <View style={styles.eventDetails}>
                 <View style={styles.eventDateTime}>
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <FontAwesome5 name="calendar-alt" size={15} color="#cccccc" />
-                    <Text style={{ fontSize: 15, color: "#cccccc", paddingLeft: 7 }}>
+                    <FontAwesome5 name="calendar-alt" size={15} color="#000000" />
+                    <Text style={{ fontSize: 15, color: "#000000", paddingLeft: 7,fontFamily:'TekoMedium',paddingTop:2 }}>
                       {event.date ? format(event.date.toDate(), 'MMMM dd, yyyy') : ''}
                     </Text>
                   </View>
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <Feather name="watch" size={15} color="#dce0dd" />
-                    <Text style={{ fontSize: 15, color: "#cccccc", paddingLeft: 7 }}>
+                    <Feather name="watch" size={15} color="#000000" />
+                    <Text style={{ fontSize: 15, color: "#000000", paddingLeft: 7,fontFamily:'TekoMedium',paddingTop:2 }}>
                       {event.time ? format(event.time.toDate(), 'hh:mm a') : ''}
                     </Text>
                   </View>
                 </View>
                 <View style={styles.eventDateTime}>
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <EvilIcons name="location" size={15} color="#cccccc" />
+                    <EvilIcons name="location" size={15} color="#000000" />
                     <Text
-                      style={{ fontSize: 15, color: "#cccccc", paddingLeft: 6 }}
+                      style={{ fontSize: 15, color: "#000000", paddingLeft: 7,fontFamily:'TekoMedium',paddingTop:2 }}
                     >
                       {event.venue}
                     </Text>
                   </View>
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <Octicons name="organization" size={15} color="#dce0dd" />
+                    <Octicons name="organization" size={15} color="#000000" />
                     <Text
-                      style={{ fontSize: 15, color: "#cccccc", paddingLeft: 7 }}
+                      style={{ fontSize: 15, color: "#000000", paddingLeft: 7,fontFamily:'TekoMedium',paddingTop:2 }}
                     >
                       {event.clubName}
                     </Text>
@@ -102,28 +122,19 @@ const UpcomingEvents = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 20,
+    marginVertical: 20,
     marginHorizontal: 10,
-    backgroundColor: "#f4f5ff",
+    backgroundColor: "#283F4D",
     padding: 10,
     borderRadius: 15,
-    borderWidth: 1,
-    borderColor: "#feffff",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 10,
-      height: 0,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 15,
+    // borderWidth: 1,
   },
   text: {
-    fontSize: 22,
+    fontSize: 28,
     paddingLeft: 12,
     paddingBottom: 12,
-    fontWeight: "bold",
-    color: "black",
+    color: "#A9B2B6",
+    fontFamily:'TekoSemiBold'
   },
   scrollViewContent: {
     alignItems: "center",
@@ -132,7 +143,7 @@ const styles = StyleSheet.create({
     height: 270,
     width: 300,
     marginHorizontal: 10,
-    backgroundColor: "white",
+    backgroundColor: "#FCCD00",
     borderRadius: 10,
   },
   image: {

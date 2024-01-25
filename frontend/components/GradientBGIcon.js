@@ -15,11 +15,11 @@ const GradientBGIcon = ({name, color, size}) => {
 const styles = StyleSheet.create({
     Container: {
       borderWidth: 2,
-      borderColor: '#cbfff4',
+      borderColor: '#A9B2B6',
       borderRadius: 12,
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: '#21262E',
+      backgroundColor: '#A9B2B6',
       overflow: 'hidden',
     },
     LinearGradientBG: {

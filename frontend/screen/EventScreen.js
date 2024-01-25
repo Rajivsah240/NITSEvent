@@ -6,32 +6,56 @@ import YourEvents from "../clubComponents/YourEvents";
 import { FIRESTORE_DB } from "../config/firebase";
 import { query, collection, getDocs } from "firebase/firestore";
 import { useFocusEffect } from "@react-navigation/native";
-
+import * as Font from "expo-font";
 const EventScreen = ({ navigation }) => {
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [searchText, setSearchText] = useState("");
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+  let customFonts = {
+    Convergence: require("../assets/fonts/Convergence-Regular.ttf"),
+    Monoton: require("../assets/fonts/Monoton-Regular.ttf"),
+    Teko: require("../assets/fonts/Teko-VariableFont_wght.ttf"),
+    TekoSemiBold: require("../assets/fonts/Teko-SemiBold.ttf"),
+    TekoMedium: require("../assets/fonts/Teko-Medium.ttf"),
+  };
+  const loadFontsAsync = async () => {
+    await Font.loadAsync(customFonts);
+    setFontsLoaded(true);
+  };
 
+  const fetchEvents = async () => {
+    try {
+      const q = query(collection(FIRESTORE_DB, "event"));
+      const querySnapshot = await getDocs(q);
+      
+      const fetchedEvents = [];
+      querySnapshot.forEach((doc) => {
+        fetchedEvents.push(doc.data());
+      });
+      
+      setEvents(fetchedEvents);
+      setFilteredEvents(fetchedEvents);
+    } catch (error) {
+      console.error("Error fetching events: ", error);
+    }
+  };
+  
   useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const q = query(collection(FIRESTORE_DB, "event"));
-        const querySnapshot = await getDocs(q);
-
-        const fetchedEvents = [];
-        querySnapshot.forEach((doc) => {
-          fetchedEvents.push(doc.data());
-        });
-
-        setEvents(fetchedEvents);
-        setFilteredEvents(fetchedEvents);
-      } catch (error) {
-        console.error("Error fetching events: ", error);
-      }
-    };
-
+    loadFontsAsync();
     fetchEvents();
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchEvents();
+      loadFontsAsync();
+    }, [navigation])
+  );
+  
+  if (!fontsLoaded) {
+    return null;
+  }
 
   const handleSearch = () => {
     const filtered = events.filter((event) =>
@@ -41,7 +65,7 @@ const EventScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#f4f5ff" }}>
+    <View style={{ flex: 1, backgroundColor: "#102733" }}>
       <View style={styles.InputContainerComponent}>
         <TouchableOpacity onPress={handleSearch}>
           <EvilIcons style={styles.InputIcon} name="search" size={24} color="red" />
@@ -58,7 +82,7 @@ const EventScreen = ({ navigation }) => {
         />
 
         {searchText.length > 0 ? (
-          <TouchableOpacity onPress={() => setSearchText("")}>
+          <TouchableOpacity onPress={handleSearch}>
             <AntDesign style={styles.InputIcon} name="rightcircleo" size={24} color="red" />
           </TouchableOpacity>
         ) : (
@@ -72,7 +96,6 @@ const EventScreen = ({ navigation }) => {
           <TouchableOpacity
             onPress={() => {
               navigation.navigate("DetailScreenStudent", { item });
-              console.log(item);
             }}
           >
             <YourEvents key={item.id} event={item} />
@@ -90,19 +113,9 @@ const styles = StyleSheet.create({
     margin: 30,
     marginTop:50,
     borderRadius: 20,
-    backgroundColor: "#f4f5ff",
+    backgroundColor: "#FCCD00",
     alignItems: "center",
     borderRadius: 15,
-    borderWidth: 2,
-    borderColor: "#feffff",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 10,
-      height: 0,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 15,
   },
   InputIcon: {
     marginHorizontal: 20,
@@ -111,7 +124,8 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 60,
     fontSize: 14,
-    color: "black",
+    color: "#29404E",
+    fontFamily:'Convergence'
   },
 });
 

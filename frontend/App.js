@@ -21,7 +21,11 @@ import DetailScreenStudent from './screen/DetailScreenStudent';
 import EventRegistrationScreen from './screen/EventRegistrationScreen';
 import RegisteredEvents from './screen/RegisteredEvents';
 import ClubDetails from './screen/ClubDetails';
-import Clubs from './screen/Clubs';
+import Clubs from './components/Clubs';
+import ClubEventDetails from './screen/ClubEventDetails';
+import ModifyEventScreen from './screen/ModifyEventScreen';
+import EventNotificationEditScreen from './screen/EventNotificationEditScreen';
+
 
 
 const Stack = createNativeStackNavigator();
@@ -38,7 +42,6 @@ const App = () => {
         <Stack.Screen name="SignUpScreen" component={SignUpScreen}/>
         <Stack.Screen name="LoginScreen" component={LoginScreen}/>
         <Stack.Screen name="EventScreen" component={EventScreen}/>
-        <Stack.Screen name="Clubs" component={Clubs}/>
         <Stack.Screen name="ClubDetails" component={ClubDetails}/>
         <Stack.Screen name="EventRegistrationScreen" component={EventRegistrationScreen}/>
         <Stack.Screen name="DetailScreenStudent" component={DetailScreenStudent} />
@@ -47,6 +50,9 @@ const App = () => {
         <Stack.Screen name='ClubLogin' component={ClubLogin}/>
         <Stack.Screen name='ClubHomeScreen' component={ClubHomeScreen}/>
         <Stack.Screen name='EventAdd' component={EventAdd}/>
+        <Stack.Screen name="ClubEventDetails" component={ClubEventDetails}/>
+        <Stack.Screen name="ModifyEventScreen" component={ModifyEventScreen}/>
+        <Stack.Screen name="EventNotificationEditScreen" component={EventNotificationEditScreen}/>
         <Stack.Screen
           name="Tab"
           component={TabNavigator}

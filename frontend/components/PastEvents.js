@@ -16,9 +16,24 @@ import {
   orderBy,
 } from "firebase/firestore";
 import { parseISO, format } from "date-fns";
+import * as Font from "expo-font";
 const PastEvents = () => {
   const [events, setEvents] = useState([]);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+  let customFonts = {
+    Convergence: require("../assets/fonts/Convergence-Regular.ttf"),
+    Monoton: require("../assets/fonts/Monoton-Regular.ttf"),
+    Teko: require("../assets/fonts/Teko-VariableFont_wght.ttf"),
+    TekoSemiBold: require("../assets/fonts/Teko-SemiBold.ttf"),
+    TekoMedium: require("../assets/fonts/Teko-Medium.ttf"),
+  };
+  const loadFontsAsync = async () => {
+    await Font.loadAsync(customFonts);
+    setFontsLoaded(true);
+  };
+
   useEffect(() => {
+    loadFontsAsync();
     const fetchEvents = async () => {
       try {
         const eventsCollection = collection(FIRESTORE_DB, "event");
@@ -34,20 +49,24 @@ const PastEvents = () => {
         );
 
         const querySnapshot = await getDocs(q);
-
+        
         const fetchedEvents = [];
         querySnapshot.forEach((doc) => {
           fetchedEvents.push({ id: doc.id, ...doc.data() });
         });
-
+        
         setEvents(fetchedEvents);
       } catch (error) {
         console.error("Error fetching events:", error);
       }
     };
-
+    
     fetchEvents();
   }, []);
+  
+  if (!fontsLoaded) {
+    return null;
+  }
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Past Events</Text>
@@ -66,10 +85,10 @@ const PastEvents = () => {
                     <FontAwesome5
                       name="calendar-alt"
                       size={15}
-                      color="#cccccc"
+                      color="#000000"
                     />
                     <Text
-                      style={{ fontSize: 15, color: "#cccccc", paddingLeft: 7 }}
+                      style={{ fontSize: 15, color: "#000000", paddingLeft: 7,fontFamily:'TekoMedium',paddingTop:2 }}
                     >
                       {event.date
                         ? format(event.date.toDate(), "MMMM dd, yyyy")
@@ -77,9 +96,9 @@ const PastEvents = () => {
                     </Text>
                   </View>
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <Feather name="watch" size={15} color="#dce0dd" />
+                    <Feather name="watch" size={15} color="#000000" />
                     <Text
-                      style={{ fontSize: 15, color: "#cccccc", paddingLeft: 7 }}
+                      style={{ fontSize: 15, color: "#000000", paddingLeft: 7,fontFamily:'TekoMedium',paddingTop:2 }}
                     >
                       {event.time ? format(event.time.toDate(), "hh:mm a") : ""}
                     </Text>
@@ -87,17 +106,17 @@ const PastEvents = () => {
                 </View>
                 <View style={styles.eventDateTime}>
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <EvilIcons name="location" size={15} color="#cccccc" />
+                    <EvilIcons name="location" size={15} color="#000000" />
                     <Text
-                      style={{ fontSize: 15, color: "#cccccc", paddingLeft: 6 }}
+                      style={{ fontSize: 15, color: "#000000", paddingLeft: 7,fontFamily:'TekoMedium',paddingTop:2 }}
                     >
                       {event.venue}
                     </Text>
                   </View>
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <Octicons name="organization" size={15} color="#dce0dd" />
+                    <Octicons name="organization" size={15} color="#000000" />
                     <Text
-                      style={{ fontSize: 15, color: "#cccccc", paddingLeft: 7 }}
+                      style={{ fontSize: 15, color: "#000000", paddingLeft: 7,fontFamily:'TekoMedium',paddingTop:2 }}
                     >
                       {event.clubName}
                     </Text>
@@ -116,25 +135,17 @@ const styles = StyleSheet.create({
   container: {
     marginBottom: 20,
     marginHorizontal: 10,
-    backgroundColor: "#f4f5ff",
+    backgroundColor: "#283F4D",
     padding: 10,
     borderRadius: 15,
-    borderWidth: 1,
-    borderColor: "#feffff",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 10,
-      height: 0,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 15,
+    
   },
   text: {
-    fontSize: 22,
+    fontSize: 28,
     paddingLeft: 12,
     paddingBottom: 12,
-    fontWeight: "bold",
+    fontFamily:'TekoMedium',
+    color:'#A9B2B6'
   },
   scrollViewContent: {
     alignItems: "center",
@@ -143,7 +154,7 @@ const styles = StyleSheet.create({
     height: 270,
     width: 300,
     marginHorizontal: 10,
-    backgroundColor: "white",
+    backgroundColor: "#FCCD00",
     borderRadius: 10,
   },
   image: {

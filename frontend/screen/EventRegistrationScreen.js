@@ -12,7 +12,8 @@ import {
 
 import { useAuth } from "../AuthContext";
 import { FIRESTORE_DB } from "../config/firebase";
-import { collection, addDoc, query, where, getDocs } from "firebase/firestore"; // Firebase Firestore API
+import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
+import * as Font from "expo-font";
 
 const EventRegistrationScreen = ({ navigation, route }) => {
   const { item } = route.params;
@@ -20,6 +21,26 @@ const EventRegistrationScreen = ({ navigation, route }) => {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+  let customFonts = {
+    Convergence: require("../assets/fonts/Convergence-Regular.ttf"),
+    Monoton: require("../assets/fonts/Monoton-Regular.ttf"),
+    Teko: require("../assets/fonts/Teko-VariableFont_wght.ttf"),
+    TekoSemiBold: require("../assets/fonts/Teko-SemiBold.ttf"),
+    TekoMedium: require("../assets/fonts/Teko-Medium.ttf"),
+  };
+  const loadFontsAsync = async () => {
+    await Font.loadAsync(customFonts);
+    setFontsLoaded(true);
+  };
+
+  useEffect(() => {
+    loadFontsAsync();
+  }, []);
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   const checkDuplicateRegistration = async () => {
     try {
@@ -117,12 +138,14 @@ const EventRegistrationScreen = ({ navigation, route }) => {
       <TextInput
         style={styles.input}
         placeholder="Your Name"
+        placeholderTextColor={"#A9B2B6"}
         value={name}
         onChangeText={(text) => setName(text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Your Email"
+        placeholderTextColor={"#A9B2B6"}
         value={email}
         onChangeText={(text) => setEmail(text)}
       />
@@ -138,32 +161,36 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     paddingVertical:60,
-    backgroundColor: "#fff",
+    backgroundColor: "#102733",
   },
   registerHeader:{
     alignItems:'center'
   },
   heading: {
-    fontSize: 24,
-    fontWeight: "bold",
+    fontSize: 28,
+    fontFamily:'TekoSemiBold',
     marginBottom: 20,
+    color:"#A9B2B6"
   },
   input: {
     height: 40,
-    borderColor: "gray",
-    borderRadius:10,
+    borderColor: "#FCCD00",
+    borderRadius:20,
     borderWidth: 1,
     marginBottom: 20,
     paddingHorizontal: 10,
+    color:'#A9B2B6'
   },
   registerButton: {
-    backgroundColor: "#3498db",
+    backgroundColor: "#FCCD00",
     padding: 10,
     borderRadius: 10,
     alignItems: "center",
+    // fontFamily:'Convergence'
   },
   registerButtonText: {
-    color: "white",
+    color: "#000000",
+    fontFamily:'Convergence',
     fontSize: 16,
   },
 });

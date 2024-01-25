@@ -26,7 +26,6 @@ const ClubHomeScreen = ({ navigation }) => {
     navigation.navigate("EventAdd");
   };
   const handleSignOut = () => {
-    // Navigate to the WelcomeScreen
     navigation.navigate("WelcomeScreen");
   };
 
@@ -45,7 +44,7 @@ const ClubHomeScreen = ({ navigation }) => {
 
           const fetchedEvents = [];
           querySnapshot.forEach((doc) => {
-            fetchedEvents.push(doc.data());
+            fetchedEvents.push({id: doc.id, ...doc.data()});
           });
 
           setEvents(fetchedEvents);
@@ -55,7 +54,7 @@ const ClubHomeScreen = ({ navigation }) => {
       };
 
       fetchEvents();
-    }, [user]) // Dependency array for useCallback
+    }, [user])
   );
 
   return (
@@ -66,10 +65,16 @@ const ClubHomeScreen = ({ navigation }) => {
 
           <View style={styles.listCard}>
             <Text style={styles.text}>Your Events</Text>
-            
+
             {events.length > 0 ? (
               events.map((item) => (
-                <YourEvents key={item.id} event={item} />
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("ClubEventDetails", { item });
+                  }}
+                >
+                  <YourEvents key={item.id} event={item} />
+                </TouchableOpacity>
               ))
             ) : (
               <Text>No events found.</Text>
@@ -98,16 +103,17 @@ const ClubHomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f4f5ff",
+    backgroundColor: "#102733",
   },
   listCard: {
     marginTop: 10,
     alignItems: "center",
   },
   text: {
-    fontSize: 26,
+    fontSize: 28,
     paddingBottom: 12,
-    fontWeight: "bold",
+    fontFamily:'TekoSemiBold',
+    color:'#A9B2B6'
   },
   addButton: {
     position: "absolute",

@@ -1,5 +1,5 @@
 // ClubSignUpScreen.js
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
   View,
   Text,
@@ -21,7 +21,7 @@ import { getStorage, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { createUserWithEmailAndPassword,getAuth } from "firebase/auth";
 import { doc,setDoc } from "firebase/firestore";
 
-
+import * as Font from "expo-font";
 
 const ClubSignUpScreen = ({navigation}) => {
   const [clubName, setClubName] = useState("");
@@ -35,6 +35,27 @@ const ClubSignUpScreen = ({navigation}) => {
 
   const [imageURL, setImageURL] = useState("");
   const [uploaded, setUploaded] = useState(false);
+
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+  let customFonts = {
+    Convergence: require("../assets/fonts/Convergence-Regular.ttf"),
+    Monoton: require("../assets/fonts/Monoton-Regular.ttf"),
+    Teko: require("../assets/fonts/Teko-VariableFont_wght.ttf"),
+    TekoSemiBold: require("../assets/fonts/Teko-SemiBold.ttf"),
+    TekoMedium: require("../assets/fonts/Teko-Medium.ttf"),
+  };
+  const loadFontsAsync = async () => {
+    await Font.loadAsync(customFonts);
+    setFontsLoaded(true);
+  };
+
+  useEffect(() => {
+    loadFontsAsync();
+  }, []);
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   const handleImageUpload = async () => {
     try {
@@ -118,12 +139,14 @@ const ClubSignUpScreen = ({navigation}) => {
       <Text style={styles.title}>Club Sign Up</Text>
       <TextInput
         placeholder="Club Name"
+        placeholderTextColor={"#A9B2B6"}
         onChangeText={setClubName}
         value={clubName}
         style={styles.input}
       />
       <TextInput
         placeholder="Club Email"
+        placeholderTextColor={"#A9B2B6"}
         onChangeText={setClubEmail}
         value={clubEmail}
         style={styles.input}
@@ -131,6 +154,7 @@ const ClubSignUpScreen = ({navigation}) => {
       />
       <TextInput
         placeholder="Password"
+        placeholderTextColor={"#A9B2B6"}
         onChangeText={setPassword}
         value={password}
         style={styles.input}
@@ -138,6 +162,7 @@ const ClubSignUpScreen = ({navigation}) => {
       />
       <TextInput
         placeholder="Confirm Password"
+        placeholderTextColor={"#A9B2B6"}
         onChangeText={setConfirmPassword}
         value={confirmPassword}
         style={styles.input}
@@ -169,6 +194,7 @@ const ClubSignUpScreen = ({navigation}) => {
       )}
       <TextInput
         placeholder="Club Description"
+        placeholderTextColor={"#A9B2B6"}
         onChangeText={setClubDescription}
         value={clubDescription}
         style={styles.input}
@@ -176,17 +202,22 @@ const ClubSignUpScreen = ({navigation}) => {
       />
       <TextInput
         placeholder="Club FB Handle Link"
+        placeholderTextColor={"#A9B2B6"}
         onChangeText={setFbHandle}
         value={fbHandle}
         style={styles.input}
       />
       <TextInput
         placeholder="Club Insta Handle Link"
+        placeholderTextColor={"#A9B2B6"}
         onChangeText={setInstaHandle}
         value={instaHandle}
         style={styles.input}
       />
-      <Button title="Sign Up" onPress={handleSignUp} />
+      
+      <TouchableOpacity style={styles.signUpBtn} onPress={handleSignUp}>
+          <Text style={styles.buttonText}>Sign Up</Text>
+        </TouchableOpacity>
     </View>
   );
 };
@@ -197,35 +228,56 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 20,
+    backgroundColor:'#102733'
   },
   title: {
-    fontSize: 24,
+    fontSize: 30,
     marginBottom: 20,
+    color:'#A9B2B6',
+    fontFamily:'TekoSemiBold'
   },
   input: {
     width: "100%",
     height: 40,
-    borderColor: "gray",
+    borderColor: "#FCCD00",
     borderWidth: 1,
     marginBottom: 20,
     paddingLeft: 10,
     borderRadius: 20,
+    color:'#A9B2B6'
   },
   imageUploadButton: {
-    backgroundColor: "blue",
+    backgroundColor: "#283F4D",
     padding: 10,
     borderRadius: 5,
     marginBottom: 20,
+
   },
   imageUploadText: {
-    color: "white",
+    color: "#FCCD00",
     textAlign: "center",
+    fontFamily:'Convergence'
   },
   imagePreview: {
     width: 50,
     height: 50,
     resizeMode: "contain",
     marginVertical: 10,
+  },
+  signUpBtn: {
+    backgroundColor: "#FCCD00",
+    padding: 10,
+    width:"50%",
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent:'center',
+    marginBottom: 10,
+
+  },
+  buttonText: {
+    color: "black",
+    fontSize: 16,
+    fontFamily:'Convergence'
   },
 });
 

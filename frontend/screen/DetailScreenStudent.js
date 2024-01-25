@@ -81,9 +81,10 @@ const DetailScreenStudent = ({ navigation, route }) => {
         <View style={{ alignItems: "center", marginBottom: 60 }}>
           <Text
             style={{
-              borderColor: "red",
+              backgroundColor:'#FCCD00',
+              fontFamily:'Convergence',
               borderWidth: 1,
-              padding: 10,
+              padding: 13,
               borderRadius: 10,
             }}
           >
@@ -99,13 +100,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 25,
-    backgroundColor: "#fff",
+    backgroundColor: "#283F4D",
   },
   eventInfo: {
     top: -20,
     borderTopRightRadius: 30,
     borderTopLeftRadius: 30,
-    backgroundColor: "#fff",
+    backgroundColor: "#283F4D",
   },
 
   eventImage: {
@@ -121,6 +122,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     paddingLeft: 20,
     paddingVertical: 10,
+    color: "#A9B2B6",
   },
   eventDateTime: {
     flexDirection: "row",
@@ -134,11 +136,13 @@ const styles = StyleSheet.create({
   time: {
     fontSize: 20,
     fontFamily: "Teko",
+    color: "#A9B2B6",
   },
   desc: {
     flexDirection: "column",
     paddingLeft: 20,
     marginVertical: 10,
+    color: "#A9B2B6",
   },
   descHead: {
     fontSize: 24,
@@ -147,18 +151,19 @@ const styles = StyleSheet.create({
   descContent: {
     fontSize: 18,
     fontFamily: "Teko",
+    color: "#A9B2B6",
   },
   registerButton: {
-    borderColor: "red",
-    borderWidth: 1,
     padding: 10,
     borderRadius: 10,
     margin: 20,
     alignItems: "center",
+    backgroundColor:'#FCCD00'
   },
   registerButtonText: {
-    color: "red",
+    color: "#000000",
     fontSize: 16,
+    fontFamily:'Convergence'
   },
 });
 

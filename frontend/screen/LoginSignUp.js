@@ -55,12 +55,13 @@ const styles = StyleSheet.create({
     flex:1,
     alignItems:"center",
     justifyContent:'center',
-    backgroundColor:'#f4f5ff'
+    backgroundColor:'#102733'
 
   },
   headerContainer:{
     alignItems:'center',
-    paddingVertical:10
+    paddingVertical:10,
+    
   },
   btnContainer: {
     flexDirection:'row',
@@ -69,21 +70,25 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize:35,
-    fontFamily:'TekoSemiBold'
+    fontFamily:'TekoSemiBold',
+    color:'#A9B2B6'
   },
   accountTxt:{
-    fontFamily:"Convergence"
+    fontFamily:"Convergence",
+    color:'#A9B2B6'
   },
   button: {
-    backgroundColor: "#3498db",
+    backgroundColor: "#FCCD00",
     padding: 10,
     margin: 5,
     borderRadius: 5,
+    
   },
   buttonText: {
-    color: "white",
+    color:'#5D6D78',
     fontSize: 18,
     textAlign: "center",
+    fontFamily:'Convergence'
   },
 });
 

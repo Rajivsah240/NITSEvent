@@ -3,18 +3,37 @@ import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Alert } fro
 import { Feather } from "@expo/vector-icons";
 import { AntDesign } from '@expo/vector-icons';
 import { useAuth } from "../AuthContext";
+import * as Font from "expo-font";
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const { loginStudent, loggedIn } = useAuth();
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+  let customFonts = {
+    Convergence: require("../assets/fonts/Convergence-Regular.ttf"),
+    Monoton: require("../assets/fonts/Monoton-Regular.ttf"),
+    Teko: require("../assets/fonts/Teko-VariableFont_wght.ttf"),
+    TekoSemiBold: require("../assets/fonts/Teko-SemiBold.ttf"),
+    TekoMedium: require("../assets/fonts/Teko-Medium.ttf"),
+  };
+  const loadFontsAsync = async () => {
+    await Font.loadAsync(customFonts);
+    setFontsLoaded(true);
+  };
 
-
+  
   useEffect(() => {
     if (loggedIn) {
       navigation.navigate("Tab");
     }
+    loadFontsAsync();
   }, [loggedIn]);
+  
+  if (!fontsLoaded) {
+    return null;
+  }
+  
 
   const handleLogin = async () => {
     await loginStudent({ email, password });
@@ -38,6 +57,7 @@ const LoginScreen = ({navigation}) => {
         <TextInput
           style={styles.input}
           placeholder="Email"
+          placeholderTextColor={"#A9B2B6"}
           onChangeText={(text) => setEmail(text)}
           value={email}
           keyboardType="email-address"
@@ -46,9 +66,11 @@ const LoginScreen = ({navigation}) => {
           <TextInput
             style={styles.passwordInput}
             placeholder="Password"
+            placeholderTextColor={"#A9B2B6"}
             secureTextEntry={!showPassword}
             onChangeText={(text) => setPassword(text)}
             value={password}
+            
           />
           <TouchableOpacity
             style={styles.toggleButton}
@@ -71,7 +93,7 @@ const LoginScreen = ({navigation}) => {
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => navigation.navigate("SignUpScreen")}>
-          <Text style={{color:'#71bbde'}}>New Here? Click Here to Sign Up First.</Text>
+          <Text style={{color:'#71bbde',fontFamily:'Teko',fontSize:20}}>New Here? Click Here to Sign Up First.</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -83,7 +105,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     paddingHorizontal: 20,
-    backgroundColor: "#fff",
+    backgroundColor: "#102733",
   },
   logoContainer: {
     alignItems: "center",
@@ -95,6 +117,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     marginTop: 10,
+    color:'#A9B2B6',
+    fontFamily:'TekoSemiBold'
   },
   formContainer: {
     marginTop: 20,
@@ -103,24 +127,27 @@ const styles = StyleSheet.create({
   input: {
     width:'100%',
     height: 40,
-    borderColor: "gray",
+    borderColor: "#FCCD00",
     borderWidth: 1,
     marginBottom: 20,
     paddingLeft: 10,
     borderRadius: 20,
+    color:'#A9B2B6'
   },
   passwordInputContainer: {
     flexDirection: "row",
     alignItems: "center",
+    
   },
   passwordInput: {
     flex: 1,
     height: 40,
-    borderColor: "gray",
+    borderColor: "#FCCD00",
     borderWidth: 1,
     marginBottom: 20,
     paddingLeft: 10,
     borderRadius: 20,
+    color:'#A9B2B6'
   },
   toggleButton: {
     marginLeft: -25,
@@ -128,7 +155,7 @@ const styles = StyleSheet.create({
     left:-10
   },
   loginButton: {
-    backgroundColor: "#f4f5ff",
+    backgroundColor: "#FCCD00",
     padding: 10,
     width:"50%",
     borderRadius: 20,
@@ -145,6 +172,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "black",
     fontSize: 16,
+    fontFamily :'Convergence'
   },
 });
 

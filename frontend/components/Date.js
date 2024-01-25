@@ -40,7 +40,7 @@ export default Date
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: 'white',
+    backgroundColor: '#FCCD00',
     borderRadius: 15,
     borderColor: '#ddd',
     padding: 10,
