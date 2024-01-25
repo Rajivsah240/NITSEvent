@@ -1,14 +1,17 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { ScrollView, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { format, addDays } from "date-fns";
-
+import React, { useState, useEffect } from "react";
+import { ScrollView, Text, TouchableOpacity, StyleSheet, View } from "react-native";
+import { format, addDays, startOfWeek } from "date-fns";
+import moment from 'moment';
 const CalendarNew = ({ selectedDate, onSelectDate }) => {
   const [dates, setDates] = useState([]);
+  const [scrollPosition, setScrollPosition] = useState(0)
+  const [currentMonth, setCurrentMonth] = useState()
 
   const generateDates = () => {
     const newDates = [];
+    const startDate = new Date();
     for (let i = 0; i < 10; i++) {
-      const date = addDays(new Date(), i);
+      const date = addDays(startDate, i);
       newDates.push(date);
     }
     setDates(newDates);
@@ -16,44 +19,66 @@ const CalendarNew = ({ selectedDate, onSelectDate }) => {
 
   useEffect(() => {
     generateDates();
-  }, []); // Run only once when the component mounts
+  }, []);
+  const getCurrentMonth = () => {
+    const month = moment(dates[0]).add(scrollPosition / 60, 'days').format('MMMM')
+    setCurrentMonth(month)
+  }
+
+  useEffect(() => {
+    getCurrentMonth()
+  }, [scrollPosition])
 
   const handleDatePress = (date) => {
     onSelectDate(date);
   };
 
   return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{paddingHorizontal:20}}>
-      {dates.map((date, index) => (
-        <TouchableOpacity
-          key={index}
-          onPress={() => handleDatePress(date)}
-          style={[
-            styles.dateButton,
-            {
-              backgroundColor:
-                format(date, "MMMM dd, yyyy") ===
-                format(selectedDate, "MMMM dd, yyyy")
-                  ? "#000000"
-                  : "#FCCD00",
-            },
-          ]}
-        >
-          <Text style={styles.dateText}>{format(date, "MMMM dd")}</Text>
-        </TouchableOpacity>
-      ))}
-    </ScrollView>
+    <>
+    <View style={styles.month}><Text style={styles.monthText}>{currentMonth}</Text></View>
+    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        {dates.map((date, index) => (
+          <TouchableOpacity
+            key={index}
+            onPress={() => handleDatePress(date)}
+            style={[
+              styles.dateButton,
+              {
+                backgroundColor:
+                  format(date, "MMMM dd, yyyy") ===
+                  format(selectedDate, "MMMM dd, yyyy")
+                    ? "#000000"
+                    : "#fff",
+              },
+            ]}
+          >
+            <Text style={styles.dateText}>{format(date, "EEE")}</Text>
+            <Text style={styles.dateText}>{format(date, "dd")}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    </ScrollView></>
   );
 };
 
 const styles = StyleSheet.create({
   dateButton: {
-    padding: 10,
+    padding: 8,
     margin: 5,
-    borderRadius: 8,
+    borderRadius: 12,
+    alignItems:'center'
   },
   dateText: {
-    color: "white",
+    color: "#A9B2B6",
+  },
+  month:{
+    alignItems:'center'
+  },
+  monthText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 10,
   },
 });
 

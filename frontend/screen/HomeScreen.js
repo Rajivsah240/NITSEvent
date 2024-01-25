@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
+import { Divider } from "react-native-paper";
 import React, { useState, useEffect } from "react";
 import { FlatList } from "react-native";
 import { FIRESTORE_DB } from "../config/firebase";
@@ -110,6 +111,7 @@ const HomeScreen = ({ navigation }) => {
         <HeaderBar onSignOut={handleSignOut} />
         <HeaderEvent selectedDate={selectedDate} events={events} />
         <CalendarNew selectedDate={selectedDate} onSelectDate={handleDateSelect} />
+        <Divider style={{marginTop:15}} horizontalInset={true}/>
         <UpcomingEvents />
         <PastEvents />
         <View style={styles.container}>
@@ -148,8 +150,8 @@ const styles = StyleSheet.create({
     paddingBottom: 120,
     // paddingHorizontal: 10,
     flexDirection: "column",
-    borderRadius: 15,
-    backgroundColor: "#102733",
+    // borderRadius: 15,
+    backgroundColor: "#F1F0F9",
   },
   calenderContainer: {
     paddingTop: 20,

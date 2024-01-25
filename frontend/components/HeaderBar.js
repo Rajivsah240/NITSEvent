@@ -4,6 +4,7 @@ import GradientBGIcon from './GradientBGIcon';
 import ProfilePic from './ProfilePic';
 import { useAuth } from '../AuthContext';
 import * as Font from "expo-font";
+
 const HeaderBar = ({ onSignOut }) => {
   const [showSignout, setShowSignout] = useState(false);
   const {logout,loggedIn,user} = useAuth();
@@ -44,40 +45,41 @@ const HeaderBar = ({ onSignOut }) => {
   };
   return (
     <View style={styles.HeaderContainer}>
+      <TouchableOpacity onPress={handleProfilePress}>
+        <ProfilePic />
+      </TouchableOpacity>
+      <Text style={styles.HeaderText}>Hello, {name} !</Text>
       <GradientBGIcon
         name="menu"
         color='#A9B2B6'
         size='15'
       />
-      <Text style={styles.HeaderText}>Hello, {name} !</Text>
-      <TouchableOpacity onPress={handleProfilePress}>
-        <ProfilePic />
-      </TouchableOpacity>
       {showSignout && (
         <TouchableOpacity style={styles.SignoutBtn} onPress={handleSignoutPress}>
           <Text style={styles.SignoutText}>Sign Out</Text>
         </TouchableOpacity>
       )}
+      <StatusBar showHideTransition={'slide'}/>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
     HeaderContainer: {
-      backgroundColor:'#283F4D',
-      paddingVertical:20,
+      backgroundColor:'#faf8f7',
+      paddingVertical:10,
       paddingLeft:30,
       paddingRight:30,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      borderBottomRightRadius:50,
-      borderBottomLeftRadius:50,
-      marginTop:StatusBar.currentHeight
+      borderBottomRightRadius:15,
+      borderBottomLeftRadius:15,
+      // marginTop:StatusBar.currentHeight
     },
     HeaderText: {
       fontSize: 25,
-      color: '#f8f8f8',
+      color: '#000000',
       letterSpacing:3,
       fontFamily:'TekoSemiBold'
     },

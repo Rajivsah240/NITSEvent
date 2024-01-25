@@ -1,11 +1,11 @@
 import { React, useState, useEffect, FlatList } from "react";
-import { StyleSheet, Text, View, Image,ScrollView } from "react-native";
+import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { FIRESTORE_DB } from "../config/firebase";
 import * as Font from "expo-font";
-const HeaderEvent = ({ selectedDate,events }) => {
+const HeaderEvent = ({ selectedDate, events }) => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
-  
+
   let customFonts = {
     Convergence: require("../assets/fonts/Convergence-Regular.ttf"),
     Monoton: require("../assets/fonts/Monoton-Regular.ttf"),
@@ -21,7 +21,6 @@ const HeaderEvent = ({ selectedDate,events }) => {
   useEffect(() => {
     loadFontsAsync();
     console.log("date passed in header event: ", selectedDate);
-    
   }, [selectedDate]);
 
   if (!fontsLoaded) {
@@ -31,31 +30,31 @@ const HeaderEvent = ({ selectedDate,events }) => {
   if (!events || events.length === 0) {
     // Handle the case when events are still being fetched or no events exist
     return (
-    
-      <View style={styles.headerContainer}>
+      <View style={{ alignItems: "center" }}>
+        <View style={styles.headerContainer}>
           <Image
-            source={require('../assets/images/no-event.jpg')}
+            source={require("../assets/images/no-event.jpg")}
             style={styles.headerImage}
             resizeMode="contain"
           />
+          <Text style={styles.headerEventName}></Text>
         </View>
+      </View>
     );
-    
   }
   return (
-    <View>
+    <View style={{ alignItems: "center" }}>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-      {events.map((event, index) => (
-        <View style={styles.headerContainer} key={index}>
-          <Image
-            source={{ uri: event.imageURL }}
-            style={styles.headerImage}
-            resizeMode="cover"
-          />
-          <Text style={styles.headerEventName}>{event.eventName}</Text>
-          <Text>{console.log(event.imageURL)}</Text>
-        </View>
-      ))}
+        {events.map((event, index) => (
+          <View style={styles.headerContainer} key={index}>
+            <Image
+              source={{ uri: event.imageURL }}
+              style={styles.headerImage}
+              resizeMode="cover"
+            />
+            <Text style={styles.headerEventName}>{event.eventName}</Text>
+          </View>
+        ))}
       </ScrollView>
     </View>
   );
@@ -64,12 +63,13 @@ const HeaderEvent = ({ selectedDate,events }) => {
 const styles = StyleSheet.create({
   headerContainer: {
     alignItems: "center",
-    backgroundColor: "#283F4D",
-    height: 300,
-    width:340,
+    backgroundColor: "#faf8f7",
+    height: 150,
+    width: 175,
     marginHorizontal: 10,
     marginVertical: 30,
-    borderRadius: 15,
+    borderRadius: 10,
+    borderWidth: 0.3,
     paddingBottom: 10,
   },
   headerImage: {
@@ -77,15 +77,15 @@ const styles = StyleSheet.create({
     height: "85%",
     borderBottomLeftRadius: 5,
     borderBottomRightRadius: 5,
-    borderTopLeftRadius: 15,
-    borderTopRightRadius: 15,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
     marginVertical: 5,
   },
   headerEventName: {
-    fontSize: 30,
-    // fontWeight:'bold',
-    color: "#A9B2B6",
-    fontFamily: "TekoSemiBold",
+    fontSize: 15,
+    fontWeight: "bold",
+    color: "#000000",
+    // fontFamily: "TekoSemiBold",
   },
 });
 

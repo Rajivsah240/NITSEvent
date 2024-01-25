@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet,Text } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import HomeScreen from "../screen/HomeScreen";
@@ -7,39 +7,53 @@ import EventScreen from "../screen/EventScreen";
 import ProfileScreen from "../screen/ProfileScreen";
 
 // import CustomIcon from "../components/CustomIcon";
-import { BlurView } from 'expo-blur';
+import { BlurView } from "expo-blur";
 
-import { AntDesign } from '@expo/vector-icons';
-import { SimpleLineIcons } from '@expo/vector-icons';
+import { AntDesign } from "@expo/vector-icons";
+import { SimpleLineIcons } from "@expo/vector-icons";
 import DetailScreenStudent from "../screen/DetailScreenStudent";
-
 
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
   return (
     <Tab.Navigator
-      screenOptions={{
+      screenOptions={({ route })=>({
         tabBarHideOnKeyboard: true,
         headerShown: false,
-        tabBarShowLabel: false,
+        tabBarShowLabel: true,
+        tabBarLabel: ({ focused }) => {
+          return <Text style={{marginLeft:30,fontSize: 14, fontWeight: '600', color: '#102733'}}>{focused ? route.name : ""}</Text>
+        },
+        tabBarLabelPosition: "beside-icon",
         tabBarStyle: styles.tabBarStyle,
-        tabBarBackground: () => (
-          <BlurView
-            overflow='hidden'
-            intensity={40}
-            style={styles.BlurViewStyles}
-          />
-        ),
-      }}
+        tabBarActiveBackgroundColor:'#96B6C5',
+        
+        tabBarItemStyle: {
+          borderTopLeftRadius: 20,
+          borderTopRightRadius:20
+        },
+        tabBarTransitionPreset: "fade",
+        tabBarTransitionDuration: 2000,
+        // tabBarBackground: () => (
+        //   <BlurView
+        //     tint="light"
+        //     intensity={100}
+        //     style={StyleSheet.absoluteFill}
+        //   />
+        // ),
+      })}
     >
       <Tab.Screen
         name="Home"
         component={HomeScreen}
         options={{
           tabBarIcon: ({ focused }) => (
-            // <Ionicons name="home" size={25} color="red" />
-            <AntDesign name="home" size={24} color={focused?"yellow":"red"} />
+            <AntDesign
+              name="home"
+              size={25}
+              color={focused ? "#102733" : "#A9B2B6"}
+            />
           ),
         }}
       ></Tab.Screen>
@@ -48,7 +62,11 @@ const TabNavigator = () => {
         component={EventScreen}
         options={{
           tabBarIcon: ({ focused }) => (
-            <SimpleLineIcons name="event" size={24} color={focused?"yellow":"red"} />
+            <SimpleLineIcons
+              name="event"
+              size={25}
+              color={focused ? "#102733" : "#A9B2B6"}
+            />
           ),
         }}
       ></Tab.Screen>
@@ -57,7 +75,11 @@ const TabNavigator = () => {
         component={ProfileScreen}
         options={{
           tabBarIcon: ({ focused }) => (
-            <AntDesign name="user" size={24} color={focused?"yellow":"red"} />
+            <AntDesign
+              name="user"
+              size={25}
+              color={focused ? "#102733" : "#A9B2B6"}
+            />
           ),
         }}
       ></Tab.Screen>
@@ -68,22 +90,26 @@ const TabNavigator = () => {
 
 const styles = StyleSheet.create({
   tabBarStyle: {
-    height: 60,
+    height: 40,
     position: "absolute",
-    backgroundColor: "rgba(12,15,20,0.5)",
-    // borderTopWidth: 0,
+    backgroundColor:'#faf8f7',
     elevation: 0,
-    borderTopColor: "transparent",
-    marginHorizontal:60,
-    marginBottom:30,
-    borderRadius:25,
-
+    // borderTopRightRadius:15,
+    // borderTopLeftRadius:15
+    // borderTopWidth: 0,
+    // backgroundColor: "rgba(12,15,20,0.5)",
+    // borderTopColor: "transparent",
+    // marginHorizontal:60,
+    // marginBottom:30,
+    borderTopLeftRadius: 23,
+    borderTopRightRadius:23
   },
-    BlurViewStyles: {
-      ...StyleSheet.absoluteFillObject,
-      borderRadius:25,
-      
-    },
+  // BlurViewStyles: {
+  //   ...StyleSheet.absoluteFillObject,
+  //   borderRadius:25,
+
+  // },
 });
 
 export default TabNavigator;
+

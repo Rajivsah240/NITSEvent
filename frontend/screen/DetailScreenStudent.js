@@ -6,11 +6,13 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  FlatList
 } from "react-native";
 import * as Font from "expo-font";
 
 const DetailScreenStudent = ({ navigation, route }) => {
   const { item } = route.params;
+  const [tab, setTab] = useState("Abt");
   const [fontsLoaded, setFontsLoaded] = useState(false);
   let customFonts = {
     Convergence: require("../assets/fonts/Convergence-Regular.ttf"),
@@ -33,66 +35,175 @@ const DetailScreenStudent = ({ navigation, route }) => {
   }
 
   const handleRegisterPress = () => {
-    // Navigate to the registration screen with the event ID
     navigation.navigate("EventRegistrationScreen", { item });
   };
+  const renderNotification = ({ item }) => (
+    <View style={styles.notificationCard}>
+      <Text style={styles.notificationCardText}>{item.notification}</Text>
+      <Text style={styles.notificationCardDate}>
+        {item.dayPosted.toDate().toLocaleDateString()}
+      </Text>
+    </View>
+  );
 
   return (
-    <ScrollView style={styles.container}>
-      <Image source={{ uri: item.imageURL }} style={styles.eventImage} />
-      <View style={styles.eventInfo}>
-        <View style={styles.nameCnt}>
-          <Text style={styles.eventname}>{item.eventName}</Text>
-        </View>
-        <View style={styles.eventDateTime}>
-          <View style={{ flexDirection: "column", alignItems: "center" }}>
-            <Text style={styles.date}>Date</Text>
-            <Text style={styles.time}>
-              {item.date.toDate().toLocaleDateString()}
-            </Text>
-          </View>
-          <View style={{ flexDirection: "column", alignItems: "center" }}>
-            <Text style={styles.date}>Time</Text>
-            <Text style={styles.time}>
-              {item.time.toDate().toLocaleTimeString()}
-            </Text>
-          </View>
-        </View>
-        <View style={styles.desc}>
-          <Text style={styles.descHead}>Description</Text>
-          <Text style={styles.descContent}>{item.description}</Text>
-        </View>
-        <View style={styles.desc}>
-          <Text style={styles.descHead}>Location</Text>
-          <Text style={styles.descContent}>{item.venue}</Text>
-        </View>
+    // <ScrollView style={styles.container}>
+    //   <Image source={{ uri: item.imageURL }} style={styles.eventImage} />
+    //   <View style={styles.eventInfo}>
+    //     <View style={styles.nameCnt}>
+    //       <Text style={styles.eventname}>{item.eventName}</Text>
+    //     </View>
+    //     <View style={styles.eventDateTime}>
+    //       <View style={{ flexDirection: "column", alignItems: "center" }}>
+    //         <Text style={styles.date}>Date</Text>
+    //         <Text style={styles.time}>
+    //           {item.date.toDate().toLocaleDateString()}
+    //         </Text>
+    //       </View>
+    //       <View style={{ flexDirection: "column", alignItems: "center" }}>
+    //         <Text style={styles.date}>Time</Text>
+    //         <Text style={styles.time}>
+    //           {item.time.toDate().toLocaleTimeString()}
+    //         </Text>
+    //       </View>
+    //     </View>
+    //     <View style={styles.desc}>
+    //       <Text style={styles.descHead}>Description</Text>
+    //       <Text style={styles.descContent}>{item.description}</Text>
+    //     </View>
+    //     <View style={styles.desc}>
+    //       <Text style={styles.descHead}>Location</Text>
+    //       <Text style={styles.descContent}>{item.venue}</Text>
+    //     </View>
 
-        <View style={styles.desc}>
-          <Text style={styles.descHead}>Club/Organizer</Text>
-          <Text style={styles.descContent}>{item.clubName}</Text>
-        </View>
+    //     <View style={styles.desc}>
+    //       <Text style={styles.descHead}>Club/Organizer</Text>
+    //       <Text style={styles.descContent}>{item.clubName}</Text>
+    //     </View>
+    //   </View>
+    //   <TouchableOpacity onPress={handleRegisterPress}>
+    //     <View style={styles.registerButton}>
+    //       <Text style={styles.registerButtonText}>Register for Event</Text>
+    //     </View>
+    //   </TouchableOpacity>
+    //   <TouchableOpacity onPress={() => navigation.navigate("Tab")}>
+    //     <View style={{ alignItems: "center", marginBottom: 60 }}>
+    //       <Text
+    //         style={{
+    //           backgroundColor:'#FCCD00',
+    //           fontFamily:'Convergence',
+    //           borderWidth: 1,
+    //           padding: 13,
+    //           borderRadius: 10,
+    //         }}
+    //       >
+    //         Back
+    //       </Text>
+    //     </View>
+    //   </TouchableOpacity>
+    // </ScrollView>
+    <View style={styles.container}>
+      <Image source={{ uri: item.imageURL }} style={styles.eventImage} />
+      {/* <View style={styles.eventInfo}> */}
+      <View style={styles.nameCnt}>
+        <Text style={styles.eventname}>{item.eventName}</Text>
       </View>
-      <TouchableOpacity onPress={handleRegisterPress}>
-        <View style={styles.registerButton}>
-          <Text style={styles.registerButtonText}>Register for Event</Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate("Tab")}>
-        <View style={{ alignItems: "center", marginBottom: 60 }}>
+      <View style={styles.abtNotfHeader}>
+        <TouchableOpacity
+          onPress={() => {
+            setTab("Abt");
+          }}
+        >
           <Text
-            style={{
-              backgroundColor:'#FCCD00',
-              fontFamily:'Convergence',
-              borderWidth: 1,
-              padding: 13,
-              borderRadius: 10,
-            }}
+            style={[
+              {
+                backgroundColor: tab === "Abt" ? "#283F4D" : "transparent",
+              },
+              styles.abtNotfHeaderTxt,
+            ]}
           >
-            Back
+            About
           </Text>
-        </View>
-      </TouchableOpacity>
-    </ScrollView>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setTab("Notf");
+          }}
+        >
+          <Text
+            style={[
+              {
+                backgroundColor: tab === "Notf" ? "#283F4D" : "transparent",
+              },
+              styles.abtNotfHeaderTxt,
+            ]}
+          >
+            Notification
+          </Text>
+        </TouchableOpacity>
+      </View>
+      {tab === "Abt" ? (
+        <ScrollView>
+          <View style={{ paddingBottom: 50 }}>
+            <View style={styles.eventDateTime}>
+              <View style={{ flexDirection: "column", alignItems: "center" }}>
+                <Text style={styles.date}>Date</Text>
+                <Text style={styles.time}>
+                  {item.date.toDate().toLocaleDateString()}
+                </Text>
+              </View>
+              <View style={{ flexDirection: "column", alignItems: "center" }}>
+                <Text style={styles.date}>Time</Text>
+                <Text style={styles.time}>
+                  {item.time.toDate().toLocaleTimeString()}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.desc}>
+              <Text style={styles.descHead}>Description</Text>
+              <Text style={styles.descContent}>{item.description}</Text>
+            </View>
+            <View style={styles.desc}>
+              <Text style={styles.descHead}>Location</Text>
+              <Text style={styles.descContent}>{item.venue}</Text>
+            </View>
+
+            <View style={styles.desc}>
+              <Text style={styles.descHead}>Club/Organizer</Text>
+              <Text style={styles.descContent}>{item.clubName}</Text>
+            </View>
+          </View>
+          <TouchableOpacity onPress={handleRegisterPress}>
+            <View style={styles.registerButton}>
+              <Text style={styles.registerButtonText}>Register for Event</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("Tab")}>
+            <View style={{ alignItems: "center", marginBottom: 60 }}>
+              <Text
+                style={{
+                  backgroundColor: "#FCCD00",
+                  fontFamily: "Convergence",
+                  borderWidth: 1,
+                  padding: 13,
+                  borderRadius: 10,
+                }}
+              >
+                Back
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </ScrollView>
+      ) : (
+        <FlatList
+          data={item.notifications}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={renderNotification}
+          style={styles.notificationContainer}
+        />
+      )}
+      {/* </View> */}
+    </View>
   );
 };
 
@@ -100,13 +211,43 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 25,
-    backgroundColor: "#283F4D",
+    backgroundColor: "#102733",
   },
-  eventInfo: {
-    top: -20,
-    borderTopRightRadius: 30,
-    borderTopLeftRadius: 30,
+  abtNotfHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-evenly",
+    height: 50,
+  },
+  abtNotfHeaderTxt: {
+    fontFamily: "TekoMedium",
+    fontSize: 25,
+    padding: 10,
+    paddingHorizontal: 55,
+    borderBottomColor: "#FCCD00",
+    borderBottomWidth: 1,
+    borderRadius: 8,
+    color: "#A9B2B6",
+  },
+  notificationContainer: {
+    marginVertical: 30,
+  },
+  notificationCard: {
     backgroundColor: "#283F4D",
+    margin: 10,
+    padding: 15,
+    borderRadius: 10,
+  },
+  notificationCardText: {
+    color: "#A9B2B6",
+    fontSize: 26,
+    fontFamily: "Teko",
+  },
+  notificationCardDate: {
+    color: "#A9B2B6",
+    fontSize: 14,
+    fontFamily: "Teko",
+    marginTop: 5,
   },
 
   eventImage: {
@@ -158,12 +299,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     margin: 20,
     alignItems: "center",
-    backgroundColor:'#FCCD00'
+    backgroundColor: "#FCCD00",
   },
   registerButtonText: {
     color: "#000000",
     fontSize: 16,
-    fontFamily:'Convergence'
+    fontFamily: "Convergence",
   },
 });
 
