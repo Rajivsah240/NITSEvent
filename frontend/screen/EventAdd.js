@@ -135,6 +135,8 @@ const EventAdd = ({ navigation }) => {
         description,
         date: Timestamp.fromDate(date),
         time: Timestamp.fromDate(time),
+        dayPosted:Timestamp.now(),
+        timePosted:Timestamp.now(),
         venue,
         imageURL,
       });

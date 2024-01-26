@@ -135,7 +135,7 @@ const ProfileScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#102733",
+    backgroundColor: "#F1F0F9",
   },
   userInfoSection: {
     paddingLeft: 20,
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     // fontWeight: "bold",
     fontFamily:'TekoSemiBold',
-    color: "#fff",
+    color: "#000000",
   },
   caption: {
     fontSize: 14,
@@ -163,14 +163,14 @@ const styles = StyleSheet.create({
   drawerItemText: {
     paddingLeft: 5,
     fontSize: 18,
-    color: "#d3d6db",
+    color: "#000000",
     fontFamily:'TekoMedium'
   },
 
   eventBox: {
     flexDirection: "row",
     justifyContent: "space-around",
-    backgroundColor: "#FCCD00",
+    backgroundColor: "#fff",
     marginHorizontal: 15,
     padding: 10,
     marginVertical: 10,
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
   eventLabel: {
     fontSize: 14,
     fontWeight: "bold",
-    color: "#333",
+    color: "#000000",
   },
 
   eventCount: {

@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, View, TouchableOpacity, TextInput, Text, FlatList } from "react-native";
 import { EvilIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-import YourEvents from "../clubComponents/YourEvents";
+
 import { FIRESTORE_DB } from "../config/firebase";
 import { query, collection, getDocs } from "firebase/firestore";
 import { useFocusEffect } from "@react-navigation/native";
 import * as Font from "expo-font";
+import CurrentFeedEvents from "../components/CurrentFeedEvents";
 const EventScreen = ({ navigation }) => {
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
@@ -65,7 +66,7 @@ const EventScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#102733" }}>
+    <View style={{ flex: 1, backgroundColor: "#F1F0F9" }}>
       <View style={styles.InputContainerComponent}>
         <TouchableOpacity onPress={handleSearch}>
           <EvilIcons style={styles.InputIcon} name="search" size={24} color="red" />
@@ -89,6 +90,7 @@ const EventScreen = ({ navigation }) => {
           <></>
         )}
       </View>
+      <View style={styles.listCard}>
       <FlatList
         data={filteredEvents}
         keyExtractor={(item) => item.id}
@@ -98,11 +100,11 @@ const EventScreen = ({ navigation }) => {
               navigation.navigate("DetailScreenStudent", { item });
             }}
           >
-            <YourEvents key={item.id} event={item} />
+            <CurrentFeedEvents key={item.id} event={item} />
           </TouchableOpacity>
         )}
-        ListHeaderComponent={() => null} // Header component (search bar) should be null
-      />
+        ListHeaderComponent={() => null}
+      /></View>
     </View>
   );
 };
@@ -110,10 +112,10 @@ const EventScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   InputContainerComponent: {
     flexDirection: "row",
-    margin: 30,
-    marginTop:50,
+    marginHorizontal: 30,
+    marginVertical:20,
     borderRadius: 20,
-    backgroundColor: "#FCCD00",
+    backgroundColor: "#fff",
     alignItems: "center",
     borderRadius: 15,
   },
@@ -122,10 +124,14 @@ const styles = StyleSheet.create({
   },
   TextInputContainer: {
     flex: 1,
-    height: 60,
+    height: 40,
     fontSize: 14,
     color: "#29404E",
-    fontFamily:'Convergence'
+    // fontFamily:'Convergence'
+  },
+  listCard: {
+    marginTop: 10,
+    alignItems: "center",
   },
 });
 

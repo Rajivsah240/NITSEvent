@@ -34,7 +34,7 @@ const HeaderEvent = ({ selectedDate, events }) => {
         <View style={styles.headerContainer}>
           <Image
             source={require("../assets/images/no-event.jpg")}
-            style={styles.headerImage}
+            style={[styles.headerImage,{height:'100%'}]}
             resizeMode="contain"
           />
           <Text style={styles.headerEventName}></Text>
@@ -50,7 +50,7 @@ const HeaderEvent = ({ selectedDate, events }) => {
             <Image
               source={{ uri: event.imageURL }}
               style={styles.headerImage}
-              resizeMode="cover"
+              resizeMode="contain"
             />
             <Text style={styles.headerEventName}>{event.eventName}</Text>
           </View>
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     height: 150,
     width: 175,
     marginHorizontal: 10,
-    marginVertical: 30,
+    marginVertical: 10,
     borderRadius: 10,
     borderWidth: 0.3,
     paddingBottom: 10,

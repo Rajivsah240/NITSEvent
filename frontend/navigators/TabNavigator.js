@@ -1,40 +1,50 @@
 import React from "react";
-import { StyleSheet,Text } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import HomeScreen from "../screen/HomeScreen";
 import EventScreen from "../screen/EventScreen";
 import ProfileScreen from "../screen/ProfileScreen";
 
-// import CustomIcon from "../components/CustomIcon";
 import { BlurView } from "expo-blur";
 
 import { AntDesign } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
-import DetailScreenStudent from "../screen/DetailScreenStudent";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import ClubDetails from "../screen/ClubDetails";
 
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
   return (
     <Tab.Navigator
-      screenOptions={({ route })=>({
+      screenOptions={({ route }) => ({
         tabBarHideOnKeyboard: true,
         headerShown: false,
         tabBarShowLabel: true,
         tabBarLabel: ({ focused }) => {
-          return <Text style={{marginLeft:30,fontSize: 14, fontWeight: '600', color: '#102733'}}>{focused ? route.name : ""}</Text>
+          return (
+            <Text
+              style={{
+                marginLeft: 20,
+                fontSize: 14,
+                fontWeight: "600",
+                color: "#102733",
+              }}
+            >
+              {focused ? route.name : ""}
+            </Text>
+          );
         },
         tabBarLabelPosition: "beside-icon",
         tabBarStyle: styles.tabBarStyle,
-        tabBarActiveBackgroundColor:'#96B6C5',
-        
+        tabBarActiveBackgroundColor: "#a0c3fa",
+
         tabBarItemStyle: {
           borderTopLeftRadius: 20,
-          borderTopRightRadius:20
+          borderTopRightRadius: 20,
         },
-        tabBarTransitionPreset: "fade",
-        tabBarTransitionDuration: 2000,
+        shifting: true,
         // tabBarBackground: () => (
         //   <BlurView
         //     tint="light"
@@ -51,7 +61,7 @@ const TabNavigator = () => {
           tabBarIcon: ({ focused }) => (
             <AntDesign
               name="home"
-              size={25}
+              size={23}
               color={focused ? "#102733" : "#A9B2B6"}
             />
           ),
@@ -64,6 +74,20 @@ const TabNavigator = () => {
           tabBarIcon: ({ focused }) => (
             <SimpleLineIcons
               name="event"
+              size={23}
+              color={focused ? "#102733" : "#A9B2B6"}
+            />
+          ),
+        }}
+      ></Tab.Screen>
+
+      <Tab.Screen
+        name="Clubs"
+        component={ClubDetails}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <MaterialCommunityIcons
+              name="google-circles-communities"
               size={25}
               color={focused ? "#102733" : "#A9B2B6"}
             />
@@ -90,9 +114,9 @@ const TabNavigator = () => {
 
 const styles = StyleSheet.create({
   tabBarStyle: {
-    height: 40,
+    height: 50,
     position: "absolute",
-    backgroundColor:'#faf8f7',
+    backgroundColor: "#faf8f7",
     elevation: 0,
     // borderTopRightRadius:15,
     // borderTopLeftRadius:15
@@ -100,9 +124,9 @@ const styles = StyleSheet.create({
     // backgroundColor: "rgba(12,15,20,0.5)",
     // borderTopColor: "transparent",
     // marginHorizontal:60,
-    // marginBottom:30,
+    // marginBottom:10,
     borderTopLeftRadius: 23,
-    borderTopRightRadius:23
+    borderTopRightRadius: 23,
   },
   // BlurViewStyles: {
   //   ...StyleSheet.absoluteFillObject,
@@ -112,4 +136,3 @@ const styles = StyleSheet.create({
 });
 
 export default TabNavigator;
-

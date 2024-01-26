@@ -17,6 +17,8 @@ const HeaderBar = ({ onSignOut }) => {
     Convergence: require("../assets/fonts/Convergence-Regular.ttf"),
     Monoton: require("../assets/fonts/Monoton-Regular.ttf"),
     Teko: require("../assets/fonts/Teko-VariableFont_wght.ttf"),
+    TekoRegular: require("../assets/fonts/Teko-Regular.ttf"),
+    TekoLight: require("../assets/fonts/Teko-Light.ttf"),
     TekoSemiBold: require("../assets/fonts/Teko-SemiBold.ttf"),
     TekoMedium: require("../assets/fonts/Teko-Medium.ttf"),
   };
@@ -80,8 +82,8 @@ const styles = StyleSheet.create({
     HeaderText: {
       fontSize: 25,
       color: '#000000',
-      letterSpacing:3,
-      fontFamily:'TekoSemiBold'
+      letterSpacing:5,
+      fontFamily:'TekoLight'
     },
     SignoutBtn: {
       position: 'absolute',

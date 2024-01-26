@@ -12,7 +12,7 @@ import HeaderBar from "../components/HeaderBar";
 
 import { FIRESTORE_DB } from "../config/firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
-import YourEvents from "../clubComponents/YourEvents";
+import YourEvents from "../components/YourEvents";
 import { useAuth } from "../AuthContext";
 
 const ClubHomeScreen = ({ navigation }) => {

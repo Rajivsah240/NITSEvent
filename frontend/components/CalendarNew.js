@@ -2,19 +2,52 @@ import React, { useState, useEffect } from "react";
 import { ScrollView, Text, TouchableOpacity, StyleSheet, View } from "react-native";
 import { format, addDays, startOfWeek } from "date-fns";
 import moment from 'moment';
+import { Entypo } from '@expo/vector-icons';
+import { FIRESTORE_DB } from "../config/firebase";
+import { Timestamp, collection, getDocs } from "firebase/firestore";
+
+
 const CalendarNew = ({ selectedDate, onSelectDate }) => {
   const [dates, setDates] = useState([]);
   const [scrollPosition, setScrollPosition] = useState(0)
   const [currentMonth, setCurrentMonth] = useState()
+  const [eventsMap, setEventsMap] = useState({});
 
-  const generateDates = () => {
+
+  const fetchEventsForDate = async (date) => {
+    try {
+      const eventsCollectionRef = collection(FIRESTORE_DB, "event");
+      const querySnapshot = await getDocs(eventsCollectionRef);
+      const fetchedEvents = [];
+      querySnapshot.forEach((doc) => {
+        const eventData = doc.data();
+        // Check if the event date matches the selected date
+        if (eventData.date.toDate().toDateString() === date.toDateString()) {
+          fetchedEvents.push({
+            id: doc.id,
+            ...doc.data(),
+          });
+        }
+      });
+      return fetchedEvents;
+    } catch (error) {
+      console.error("Error fetching events: ", error);
+    }
+  };
+
+  const generateDates = async () => {
     const newDates = [];
     const startDate = new Date();
+    const newEventsMap = {};
     for (let i = 0; i < 10; i++) {
       const date = addDays(startDate, i);
       newDates.push(date);
+
+      const events = await fetchEventsForDate(date);
+      newEventsMap[date.toDateString()] = events;
     }
     setDates(newDates);
+    setEventsMap(newEventsMap);
   };
 
   useEffect(() => {
@@ -52,9 +85,14 @@ const CalendarNew = ({ selectedDate, onSelectDate }) => {
                     : "#fff",
               },
             ]}
-          >
+          > 
             <Text style={styles.dateText}>{format(date, "EEE")}</Text>
             <Text style={styles.dateText}>{format(date, "dd")}</Text>
+            {(eventsMap[date.toDateString()] && eventsMap[date.toDateString()].length > 0)?(<Entypo name="dot-single" size={15} color="#A9B2B6" />):(<Entypo name="dot-single" size={15} style={{color:format(date, "MMMM dd, yyyy") ===
+                  format(selectedDate, "MMMM dd, yyyy")
+                    ? "#000000"
+                    : "#fff"}} />)}
+            
           </TouchableOpacity>
         ))}
       </View>
@@ -64,13 +102,15 @@ const CalendarNew = ({ selectedDate, onSelectDate }) => {
 
 const styles = StyleSheet.create({
   dateButton: {
-    padding: 8,
+    alignItems:'center',
+    width:40,
     margin: 5,
+    paddingVertical:3,
     borderRadius: 12,
-    alignItems:'center'
   },
   dateText: {
     color: "#A9B2B6",
+    fontSize:10
   },
   month:{
     alignItems:'center'
