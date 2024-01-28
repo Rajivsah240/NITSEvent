@@ -61,7 +61,7 @@ const ClubHomeScreen = ({ navigation }) => {
     <>
       <ScrollView>
         <View style={styles.container}>
-          <HeaderBar onSignOut={handleSignOut} />
+          {/* <HeaderBar onSignOut={handleSignOut} /> */}
 
           <View style={styles.listCard}>
             <Text style={styles.text}>Your Events</Text>

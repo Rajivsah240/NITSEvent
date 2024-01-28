@@ -9,18 +9,12 @@ import {
   FlatList
 } from "react-native";
 import * as Font from "expo-font";
-
+import { customFonts } from "../Theme";
 const DetailScreenStudent = ({ navigation, route }) => {
-  const { item } = route.params;
+  const { event } = route.params;
   const [tab, setTab] = useState("Abt");
   const [fontsLoaded, setFontsLoaded] = useState(false);
-  let customFonts = {
-    Convergence: require("../assets/fonts/Convergence-Regular.ttf"),
-    Monoton: require("../assets/fonts/Monoton-Regular.ttf"),
-    Teko: require("../assets/fonts/Teko-VariableFont_wght.ttf"),
-    TekoSemiBold: require("../assets/fonts/Teko-SemiBold.ttf"),
-    TekoMedium: require("../assets/fonts/Teko-Medium.ttf"),
-  };
+
   const loadFontsAsync = async () => {
     await Font.loadAsync(customFonts);
     setFontsLoaded(true);
@@ -35,7 +29,7 @@ const DetailScreenStudent = ({ navigation, route }) => {
   }
 
   const handleRegisterPress = () => {
-    navigation.navigate("EventRegistrationScreen", { item });
+    navigation.navigate("EventRegistrationScreen", { event });
   };
   const renderNotification = ({ item }) => (
     <View style={styles.notificationCard}>
@@ -103,10 +97,10 @@ const DetailScreenStudent = ({ navigation, route }) => {
     //   </TouchableOpacity>
     // </ScrollView>
     <View style={styles.container}>
-      <Image source={{ uri: item.imageURL }} style={styles.eventImage} />
+      <Image source={{ uri: event.imageURL }} style={styles.eventImage} />
       {/* <View style={styles.eventInfo}> */}
       <View style={styles.nameCnt}>
-        <Text style={styles.eventname}>{item.eventName}</Text>
+        <Text style={styles.eventname}>{event.eventName}</Text>
       </View>
       <View style={styles.abtNotfHeader}>
         <TouchableOpacity
@@ -117,7 +111,7 @@ const DetailScreenStudent = ({ navigation, route }) => {
           <Text
             style={[
               {
-                backgroundColor: tab === "Abt" ? "#283F4D" : "transparent",
+                backgroundColor: tab === "Abt" ? "#fff" : "transparent",
               },
               styles.abtNotfHeaderTxt,
             ]}
@@ -133,7 +127,7 @@ const DetailScreenStudent = ({ navigation, route }) => {
           <Text
             style={[
               {
-                backgroundColor: tab === "Notf" ? "#283F4D" : "transparent",
+                backgroundColor: tab === "Notf" ? "#fff" : "transparent",
               },
               styles.abtNotfHeaderTxt,
             ]}
@@ -143,42 +137,39 @@ const DetailScreenStudent = ({ navigation, route }) => {
         </TouchableOpacity>
       </View>
       {tab === "Abt" ? (
+        <>
         <ScrollView>
           <View style={{ paddingBottom: 50 }}>
             <View style={styles.eventDateTime}>
               <View style={{ flexDirection: "column", alignItems: "center" }}>
                 <Text style={styles.date}>Date</Text>
                 <Text style={styles.time}>
-                  {item.date.toDate().toLocaleDateString()}
+                  {event.date.toDate().toLocaleDateString()}
                 </Text>
               </View>
               <View style={{ flexDirection: "column", alignItems: "center" }}>
                 <Text style={styles.date}>Time</Text>
                 <Text style={styles.time}>
-                  {item.time.toDate().toLocaleTimeString()}
+                  {event.time.toDate().toLocaleTimeString()}
                 </Text>
               </View>
             </View>
             <View style={styles.desc}>
               <Text style={styles.descHead}>Description</Text>
-              <Text style={styles.descContent}>{item.description}</Text>
+              <Text style={styles.descContent}>{event.description}</Text>
             </View>
             <View style={styles.desc}>
               <Text style={styles.descHead}>Location</Text>
-              <Text style={styles.descContent}>{item.venue}</Text>
+              <Text style={styles.descContent}>{event.venue}</Text>
             </View>
 
             <View style={styles.desc}>
               <Text style={styles.descHead}>Club/Organizer</Text>
-              <Text style={styles.descContent}>{item.clubName}</Text>
+              <Text style={styles.descContent}>{event.clubName}</Text>
             </View>
           </View>
-          <TouchableOpacity onPress={handleRegisterPress}>
-            <View style={styles.registerButton}>
-              <Text style={styles.registerButtonText}>Register for Event</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("Tab")}>
+          
+          {/* <TouchableOpacity onPress={() => navigation.navigate("Tab")}>
             <View style={{ alignItems: "center", marginBottom: 60 }}>
               <Text
                 style={{
@@ -192,11 +183,16 @@ const DetailScreenStudent = ({ navigation, route }) => {
                 Back
               </Text>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </ScrollView>
+        <TouchableOpacity onPress={handleRegisterPress}>
+            <View style={styles.registerButton}>
+              <Text style={styles.registerButtonText}>Register for Event</Text>
+            </View>
+          </TouchableOpacity></>
       ) : (
         <FlatList
-          data={item.notifications}
+          data={event.notifications}
           keyExtractor={(item, index) => index.toString()}
           renderItem={renderNotification}
           style={styles.notificationContainer}
@@ -210,60 +206,68 @@ const DetailScreenStudent = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 25,
-    backgroundColor: "#102733",
+    // paddingTop: 25,
+    backgroundColor: "#F1F0F9",
   },
   abtNotfHeader: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-evenly",
-    height: 50,
+    // height: 50,
   },
   abtNotfHeaderTxt: {
     fontFamily: "TekoMedium",
-    fontSize: 25,
+    fontSize: 15,
     padding: 10,
-    paddingHorizontal: 55,
-    borderBottomColor: "#FCCD00",
-    borderBottomWidth: 1,
-    borderRadius: 8,
-    color: "#A9B2B6",
+    paddingHorizontal: 70,
+    borderBottomRightRadius:8,
+    borderBottomLeftRadius:8,
+    color: "#000000",
   },
   notificationContainer: {
     marginVertical: 30,
   },
   notificationCard: {
-    backgroundColor: "#283F4D",
+    backgroundColor: "#fff",
     margin: 10,
     padding: 15,
     borderRadius: 10,
   },
   notificationCardText: {
-    color: "#A9B2B6",
-    fontSize: 26,
+    color: "#000000",
+    fontSize: 23,
     fontFamily: "Teko",
   },
   notificationCardDate: {
-    color: "#A9B2B6",
-    fontSize: 14,
+    color: "#000000",
+    fontSize: 10,
     fontFamily: "Teko",
     marginTop: 5,
   },
 
   eventImage: {
     width: "100%",
-    height: 300,
+    height: 150,
     resizeMode: "cover",
     overflow: "hidden",
   },
+  nameCnt:{
+    backgroundColor:'red'
+  },
 
   eventname: {
-    fontSize: 50,
+    position:'absolute',
+    top:-60,
+    fontSize: 30,
     fontFamily: "TekoMedium",
     marginVertical: 10,
-    paddingLeft: 20,
+    paddingHorizontal: 20,
     paddingVertical: 10,
-    color: "#A9B2B6",
+    color: "#fff",
+    textShadowColor: "blue",
+    textShadowOffset: { width: -3, height: 1 },
+    textShadowRadius: 2,
+    
   },
   eventDateTime: {
     flexDirection: "row",
@@ -272,7 +276,7 @@ const styles = StyleSheet.create({
   },
   date: {
     fontSize: 23,
-    fontFamily: "TekoSemiBold",
+    fontFamily: "TekoLight",
   },
   time: {
     fontSize: 20,
@@ -281,30 +285,31 @@ const styles = StyleSheet.create({
   },
   desc: {
     flexDirection: "column",
-    paddingLeft: 20,
+    paddingHorizontal: 20,
     marginVertical: 10,
-    color: "#A9B2B6",
   },
   descHead: {
     fontSize: 24,
-    fontFamily: "TekoSemiBold",
+    fontFamily: "TekoLight",
   },
   descContent: {
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: "Teko",
-    color: "#A9B2B6",
+    color: "#000000",
   },
   registerButton: {
     padding: 10,
-    borderRadius: 10,
-    margin: 20,
+    paddingBottom:10,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    // margin: 20,
     alignItems: "center",
-    backgroundColor: "#FCCD00",
+    backgroundColor: "#fff",
   },
   registerButtonText: {
     color: "#000000",
-    fontSize: 16,
-    fontFamily: "Convergence",
+    fontSize: 24,
+    fontFamily: "TekoLight",
   },
 });
 

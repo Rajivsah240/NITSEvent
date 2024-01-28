@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, TouchableOpacity, TextInput, Text, FlatList } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  TextInput,
+  Text,
+  FlatList,
+  ScrollView,
+} from "react-native";
 import { EvilIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-
+import { customFonts } from "../Theme";
 import { FIRESTORE_DB } from "../config/firebase";
 import { query, collection, getDocs } from "firebase/firestore";
 import { useFocusEffect } from "@react-navigation/native";
@@ -13,13 +21,7 @@ const EventScreen = ({ navigation }) => {
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [fontsLoaded, setFontsLoaded] = useState(false);
-  let customFonts = {
-    Convergence: require("../assets/fonts/Convergence-Regular.ttf"),
-    Monoton: require("../assets/fonts/Monoton-Regular.ttf"),
-    Teko: require("../assets/fonts/Teko-VariableFont_wght.ttf"),
-    TekoSemiBold: require("../assets/fonts/Teko-SemiBold.ttf"),
-    TekoMedium: require("../assets/fonts/Teko-Medium.ttf"),
-  };
+
   const loadFontsAsync = async () => {
     await Font.loadAsync(customFonts);
     setFontsLoaded(true);
@@ -29,19 +31,19 @@ const EventScreen = ({ navigation }) => {
     try {
       const q = query(collection(FIRESTORE_DB, "event"));
       const querySnapshot = await getDocs(q);
-      
+
       const fetchedEvents = [];
       querySnapshot.forEach((doc) => {
-        fetchedEvents.push(doc.data());
+        fetchedEvents.push({ id: doc.id, ...doc.data() });
       });
-      
+
       setEvents(fetchedEvents);
       setFilteredEvents(fetchedEvents);
     } catch (error) {
       console.error("Error fetching events: ", error);
     }
   };
-  
+
   useEffect(() => {
     loadFontsAsync();
     fetchEvents();
@@ -53,7 +55,7 @@ const EventScreen = ({ navigation }) => {
       loadFontsAsync();
     }, [navigation])
   );
-  
+
   if (!fontsLoaded) {
     return null;
   }
@@ -69,7 +71,12 @@ const EventScreen = ({ navigation }) => {
     <View style={{ flex: 1, backgroundColor: "#F1F0F9" }}>
       <View style={styles.InputContainerComponent}>
         <TouchableOpacity onPress={handleSearch}>
-          <EvilIcons style={styles.InputIcon} name="search" size={24} color="red" />
+          <EvilIcons
+            style={styles.InputIcon}
+            name="search"
+            size={24}
+            color="red"
+          />
         </TouchableOpacity>
         <TextInput
           placeholder="Find Your Event..."
@@ -84,27 +91,47 @@ const EventScreen = ({ navigation }) => {
 
         {searchText.length > 0 ? (
           <TouchableOpacity onPress={handleSearch}>
-            <AntDesign style={styles.InputIcon} name="rightcircleo" size={24} color="red" />
+            <AntDesign
+              style={styles.InputIcon}
+              name="rightcircleo"
+              size={24}
+              color="red"
+            />
           </TouchableOpacity>
         ) : (
           <></>
         )}
       </View>
+      <ScrollView>
       <View style={styles.listCard}>
-      <FlatList
+        {filteredEvents.length > 0 ? (
+          filteredEvents.map((item) => (
+            <CurrentFeedEvents
+              navigation={navigation}
+              
+              key={item.id}
+              event={item}
+            />
+          ))
+        ) : (
+          <Text>No events found.</Text>
+        )}
+        {/* <FlatList
         data={filteredEvents}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("DetailScreenStudent", { item });
-            }}
-          >
+          // <TouchableOpacity
+          //   onPress={() => {
+          //     navigation.navigate("DetailScreenStudent", { item });
+          //   }}
+          // >
             <CurrentFeedEvents key={item.id} event={item} />
-          </TouchableOpacity>
+          // </TouchableOpacity>
         )}
-        ListHeaderComponent={() => null}
-      /></View>
+        // ListHeaderComponent={() => null}
+      /> */}
+      </View>
+      </ScrollView>
     </View>
   );
 };
@@ -113,7 +140,7 @@ const styles = StyleSheet.create({
   InputContainerComponent: {
     flexDirection: "row",
     marginHorizontal: 30,
-    marginVertical:20,
+    marginVertical: 20,
     borderRadius: 20,
     backgroundColor: "#fff",
     alignItems: "center",
@@ -132,6 +159,7 @@ const styles = StyleSheet.create({
   listCard: {
     marginTop: 10,
     alignItems: "center",
+    paddingBottom: 130,
   },
 });
 

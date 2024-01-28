@@ -7,6 +7,7 @@ import { Feather } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 import { Octicons } from '@expo/vector-icons';
 import * as Font from "expo-font";
+import { customFonts } from "../Theme";
 const YourEvents = ({ event }) => {
   // Convert Firestore Timestamp to JavaScript Date
   const eventDate = event.date ? event.date.toDate() : null;
@@ -16,13 +17,7 @@ const YourEvents = ({ event }) => {
   const formattedDate = eventDate ? format(eventDate, "MMMM dd, yyyy") : "";
   const formattedTime = eventTime ? format(eventTime, "hh:mm a") : "";
   const [fontsLoaded, setFontsLoaded] = useState(false);
-  let customFonts = {
-    Convergence: require("../assets/fonts/Convergence-Regular.ttf"),
-    Monoton: require("../assets/fonts/Monoton-Regular.ttf"),
-    Teko: require("../assets/fonts/Teko-VariableFont_wght.ttf"),
-    TekoSemiBold: require("../assets/fonts/Teko-SemiBold.ttf"),
-    TekoMedium: require("../assets/fonts/Teko-Medium.ttf"),
-  };
+
   const loadFontsAsync = async () => {
     await Font.loadAsync(customFonts);
     setFontsLoaded(true);

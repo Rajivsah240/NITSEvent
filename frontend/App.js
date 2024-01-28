@@ -25,6 +25,9 @@ import Clubs from './components/Clubs';
 import ClubEventDetails from './screen/ClubEventDetails';
 import ModifyEventScreen from './screen/ModifyEventScreen';
 import EventNotificationEditScreen from './screen/EventNotificationEditScreen';
+import CurrentFeedEvents from './components/CurrentFeedEvents';
+import CommentSection from './screen/CommentSection';
+import EditProfileStudent from './screen/EditProfileStudent';
 
 
 
@@ -35,6 +38,7 @@ const App = () => {
   return (
     <SafeAreaView style={styles.container}>
     <AuthProvider>
+      
     <NavigationContainer>
       <Stack.Navigator initialRouteName="WelcomeScreen" screenOptions={{headerShown: false}}>
         <Stack.Screen name="WelcomeScreen" component={WelcomeScreen}/>
@@ -53,6 +57,8 @@ const App = () => {
         <Stack.Screen name="ClubEventDetails" component={ClubEventDetails}/>
         <Stack.Screen name="ModifyEventScreen" component={ModifyEventScreen}/>
         <Stack.Screen name="EventNotificationEditScreen" component={EventNotificationEditScreen}/>
+        <Stack.Screen name="CommentSection" component={CommentSection}/>
+        <Stack.Screen name="EditProfileStudent" component={EditProfileStudent}/>
         <Stack.Screen
           name="Tab"
           component={TabNavigator}

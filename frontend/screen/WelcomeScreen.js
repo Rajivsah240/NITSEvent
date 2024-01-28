@@ -3,13 +3,10 @@ import { View, Text, StyleSheet, ImageBackground, Image } from "react-native";
 import * as Font from 'expo-font';
 import { StatusBar } from "expo-status-bar";
 import { useFocusEffect } from "@react-navigation/native";
-
+import { customFonts } from "../Theme";
 const WelcomeScreen = ({ navigation }) => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
-  let customFonts = {
-    Convergence: require("../assets/fonts/Convergence-Regular.ttf"),
-    Monoton: require("../assets/fonts/Monoton-Regular.ttf"),
-  };
+
   const loadFontsAsync = async () => {
     await Font.loadAsync(customFonts);
     setFontsLoaded(true);

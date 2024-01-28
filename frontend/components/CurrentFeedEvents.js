@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, Image,TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Share,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { parseISO, format } from "date-fns";
 
@@ -8,16 +15,32 @@ import { EvilIcons } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
+import { Fontisto } from "@expo/vector-icons";
 import * as Font from "expo-font";
 import { Avatar, Divider } from "react-native-paper";
-
+import { getDoc } from "firebase/firestore";
 import { FIRESTORE_DB } from "../config/firebase";
-import { collection, getDocs, where, query } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  where,
+  query,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 import { useFocusEffect } from "@react-navigation/native";
-
-const CurrentFeedEvents = ({ event }) => {
+import { useAuth } from "../AuthContext";
+import CommentSection from "../screen/CommentSection";
+import { customFonts } from "../Theme";
+const CurrentFeedEvents = ({ navigation,onRenderChanges, event }) => {
+  const eventId = event.id;
+  const { user } = useAuth();
+  const userId = user.uid;
+  const like = event.likes && event.likes.includes(userId);
+  const [liked, setLiked] = useState(null);
   const [clubDetails, setClubDetails] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showComments, setShowComments] = useState(false);
   const eventDate = event.date ? event.date.toDate() : null;
   const eventTime = event.time ? event.time.toDate() : null;
 
@@ -25,17 +48,74 @@ const CurrentFeedEvents = ({ event }) => {
   const formattedTime = eventTime ? format(eventTime, "hh:mm a") : "";
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
-  let customFonts = {
-    Convergence: require("../assets/fonts/Convergence-Regular.ttf"),
-    Monoton: require("../assets/fonts/Monoton-Regular.ttf"),
-    Teko: require("../assets/fonts/Teko-VariableFont_wght.ttf"),
-    TekoLight: require("../assets/fonts/Teko-Light.ttf"),
-    TekoSemiBold: require("../assets/fonts/Teko-SemiBold.ttf"),
-    TekoMedium: require("../assets/fonts/Teko-Medium.ttf"),
-  };
+
+  const [showAddOptions, setShowAddOptions] = useState(false);
+
+
   const loadFontsAsync = async () => {
     await Font.loadAsync(customFonts);
     setFontsLoaded(true);
+  };
+  const removeLike = async () => {
+    try {
+      const eventRef = doc(FIRESTORE_DB, "event", eventId);
+      const eventSnapshot = await getDoc(eventRef);
+
+      if (!eventSnapshot.exists()) {
+        throw new Error("Event does not exist");
+      }
+
+      const eventData = eventSnapshot.data();
+      const likesArray = Array.isArray(eventData?.likes) ? eventData.likes : [];
+      const updatedLikes = likesArray.filter(
+        (likeUserId) => likeUserId !== userId
+      );
+
+      const updatedEvent = {
+        ...eventData,
+        likes: updatedLikes,
+      };
+
+      await updateDoc(eventRef, updatedEvent);
+      console.log("Like Removed!!");
+      setLiked(false);
+      onRenderChanges(true);
+    } catch (error) {
+      console.error("Error removing like: ", error);
+    }
+  };
+
+  const postLikes = async () => {
+    try {
+      const eventRef = doc(FIRESTORE_DB, "event", eventId);
+      const eventSnapshot = await getDoc(eventRef);
+
+      if (!eventSnapshot.exists()) {
+        console.error("Event does not exist");
+        return;
+      }
+
+      const eventData = eventSnapshot.data();
+      const likesArray = Array.isArray(eventData?.likes) ? eventData.likes : [];
+
+      // Check if userId is not already in the likesArray
+      if (!likesArray.includes(userId)) {
+        const updatedEvent = {
+          ...eventData,
+          likes: [...likesArray, userId],
+        };
+
+        await updateDoc(eventRef, updatedEvent);
+        console.log("Liked!!");
+        console.log(updatedEvent);
+        setLiked(true);
+        onRenderChanges(true);
+      } else {
+        console.log("User already liked this event");
+      }
+    } catch (error) {
+      console.error("Error Posting Likes!!");
+    }
   };
 
   const fetchClubDetails = async () => {
@@ -50,16 +130,49 @@ const CurrentFeedEvents = ({ event }) => {
         querySnapshot.forEach((doc) => {
           clubDetailsArray.push(doc.data());
         });
-
-        // Assuming you want to set an array of club details
         setClubDetails(clubDetailsArray);
-        console.log("Club detail", clubDetails);
-        console.log(event.uid);
       }
     } catch (error) {
       console.error("Error fetching club details: ", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handSaveBookmark = async () => {
+    try {
+      if (!user || !user.uid) {
+        console.log("User not authenticated.");
+        return;
+      }
+
+      const userDocRef = doc(FIRESTORE_DB, "studentUsers", user.uid);
+      const userSnapshot = await getDoc(userDocRef);
+
+      if (!userSnapshot.exists()) {
+        console.log("User document not found.");
+        return;
+      }
+
+      const userData = userSnapshot.data();
+      const bookmarkArray = Array.isArray(userData?.bookmarks)
+        ? userData.bookmarks
+        : [];
+
+      const updateUser = {
+        ...userData,
+        bookmarks: [
+          ...bookmarkArray,
+          {
+            eventId: event.id,
+          },
+        ],
+      };
+
+      await updateDoc(userDocRef, updateUser);
+      console.log("BookMarked!!");
+    } catch (error) {
+      console.log("There was an issue with saving the bookmark", error.message);
     }
   };
 
@@ -70,6 +183,7 @@ const CurrentFeedEvents = ({ event }) => {
     };
 
     fetchData();
+    setLiked(like);
   }, []);
   const toggleDescription = () => {
     setShowFullDescription(!showFullDescription);
@@ -82,17 +196,36 @@ const CurrentFeedEvents = ({ event }) => {
     return null;
   }
 
-  //   useFocusEffect(
-  //     React.useCallback(() => {
-  //       loadFontsAsync();
-  //       fetchClubDetails()
-  //     }, [event])
-  //   );
-
   if (!fontsLoaded || loading) {
-    // Return a loading indicator or null
-    return <Text>Loading</Text>; // You can create a LoadingIndicator component
+    return <Text>Loading</Text>;
   }
+
+  const handleAddOptions = () => {
+    setShowAddOptions(!showAddOptions);
+  };
+
+  const handleShowComments = () => {
+
+    navigation.navigate("CommentSection",{event})
+  };
+
+  const handleShare = async () => {
+    try {
+      const shareOptions = {
+        title: "Event Details",
+        message: `Check out this event: ${event.eventName}\n\n${event.description}`,
+      };
+      await Share.share(shareOptions);
+    } catch (error) {
+      console.error("Error sharing event: ", error);
+    }
+  };
+
+  const handleBookmark = () => {
+    handSaveBookmark();
+    console.log("User UID", user.uid);
+    console.log("Event ID", event.id);
+  };
 
   return (
     <View style={styles.cardContainer}>
@@ -113,7 +246,9 @@ const CurrentFeedEvents = ({ event }) => {
       </View>
       <View style={styles.eventDescription}>
         {linesToShow.map((line, index) => (
-          <Text style={styles.eventDescriptionTxt} key={index}>{line}</Text>
+          <Text style={styles.eventDescriptionTxt} key={index}>
+            {line}
+          </Text>
         ))}
         {!showFullDescription && (
           <TouchableOpacity onPress={toggleDescription}>
@@ -125,13 +260,17 @@ const CurrentFeedEvents = ({ event }) => {
             <Text style={styles.readMore}>Read Less</Text>
           </TouchableOpacity>
         )}
-
       </View>
+      <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("DetailScreenStudent", { event });
+            }}
+          >
       <Image
         source={{ uri: event.imageURL }}
         style={styles.image}
         resizeMode="cover"
-      />
+      /></TouchableOpacity>
 
       <View style={styles.eventDetails}>
         <View style={styles.eventDateTime}>
@@ -201,52 +340,59 @@ const CurrentFeedEvents = ({ event }) => {
             <Text> 0</Text>
           </View>
           <View style={styles.reach}>
-            <EvilIcons name="comment" size={20} color="black" />
-            <Text> 0</Text>
+            <TouchableOpacity onPress={handleShowComments}>
+              <EvilIcons
+                // onPress={handleShowComments}
+                name="comment"
+                size={20}
+                color="black"
+              />
+            </TouchableOpacity>
+            <Text>{event.comments?event.comments.length : 0}</Text>
           </View>
           <View style={styles.reach}>
-            <Entypo name="heart" size={20} style={{}} color="pink" />
-            <Text> 0</Text>
+            {liked === true ? (
+              <TouchableOpacity onPress={removeLike}>
+                <Entypo name="heart" size={20} color="pink" />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity onPress={postLikes}>
+                <Entypo name="heart-outlined" size={20} color="black" />
+              </TouchableOpacity>
+            )}
+            <Text style={{ paddingLeft: 5 }}>
+              {event.likes ? event.likes.length : 0}
+            </Text>
           </View>
-          <View>
-            <Entypo name="dots-three-vertical" size={22} color="black" />
-          </View>
+          <TouchableOpacity onPress={handleAddOptions}>
+            <View>
+              <Entypo name="dots-three-vertical" size={22} color="black" />
+            </View>
+          </TouchableOpacity>
+          {showAddOptions && (
+            <View style={styles.addOptions}>
+              <TouchableOpacity
+                onPress={handleShare}
+                style={{ paddingHorizontal: 10 }}
+              >
+                <Entypo name="share" size={20} color="black" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleBookmark}
+                style={{ paddingHorizontal: 10 }}
+              >
+                <Fontisto name="bookmark" size={20} color="black" />
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </View>
+      {/* {showComments && <CommentSection event={event} />} */}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  //    card: {
-  //      marginBottom: 20,
-  //      marginHorizontal: 50,
-  //      backgroundColor: "#fff",
-  //      padding: 10,
-  //      borderRadius: 15,
-
-  //    },
-  //    cardImage: {
-  //      height: 50,
-  //      width: 50,
-  //      resizeMode: "contain",
-  //    },
-  //    cardDetails: {
-  //      padding: 10,
-  //    },
-  //    eventName: {
-  //      fontSize: 18,
-  //      fontWeight: "bold",
-  //      marginBottom: 5,
-  //    },
-  //    dateTime: {
-  //      fontSize: 14,
-  //      marginBottom: 5,
-  //    },
-  //    venue: {
-  //      fontSize: 14,
-  //      color: "#777",
-  //    },
   cardHeader: {
     flexDirection: "row",
     alignItems: "center",
@@ -267,14 +413,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginVertical: 10,
   },
-  eventDescriptionTxt:{
+  eventDescriptionTxt: {
     // fontFamily:'Convergence',
-    fontSize:11
+    fontSize: 11,
   },
   readMore: {
     color: "#A9B2B6",
     marginTop: 5,
-    fontSize:10
+    fontSize: 10,
   },
   Image: {
     height: 36,
@@ -308,6 +454,18 @@ const styles = StyleSheet.create({
   },
   reach: {
     flexDirection: "row",
+  },
+  addOptions: {
+    position: "absolute",
+    backgroundColor: "white",
+    flexDirection: "row",
+    alignItems: "center",
+    right: -10,
+    top: -50,
+    padding: 10,
+    justifyContent: "space-around",
+    borderRadius: 10,
+    borderWidth: 0.5,
   },
 });
 export default CurrentFeedEvents;

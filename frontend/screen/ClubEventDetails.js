@@ -9,6 +9,7 @@ import {
   FlatList,
 } from "react-native";
 import * as Font from "expo-font";
+import { customFonts } from "../Theme";
 import { Feather } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 
@@ -19,13 +20,7 @@ const ClubEventDetails = ({ navigation, route }) => {
   const [editEvent, setEditEvent] = useState(false);
   const [editNotification, setEditNotification] = useState(false);
 
-  let customFonts = {
-    Convergence: require("../assets/fonts/Convergence-Regular.ttf"),
-    Monoton: require("../assets/fonts/Monoton-Regular.ttf"),
-    Teko: require("../assets/fonts/Teko-VariableFont_wght.ttf"),
-    TekoSemiBold: require("../assets/fonts/Teko-SemiBold.ttf"),
-    TekoMedium: require("../assets/fonts/Teko-Medium.ttf"),
-  };
+
   const loadFontsAsync = async () => {
     await Font.loadAsync(customFonts);
     setFontsLoaded(true);

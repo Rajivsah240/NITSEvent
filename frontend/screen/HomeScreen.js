@@ -9,16 +9,17 @@ import {
 import { Divider } from "react-native-paper";
 import React, { useState, useEffect } from "react";
 import { FIRESTORE_DB } from "../config/firebase";
-import { Timestamp, collection, getDocs } from "firebase/firestore";
+import { Timestamp, collection, getDocs, query, where } from "firebase/firestore";
 
 import HeaderBar from "../components/HeaderBar";
-
 import * as Font from "expo-font";
 import CalendarNew from "../components/CalendarNew";
 import HeaderEvent from "../components/HeaderEvent";
 import CurrentFeed from "../components/CurrentFeed";
-
+import { useFocusEffect } from "@react-navigation/native";
+import { customFonts } from "../Theme";
 const HomeScreen = ({ navigation }) => {
+  const [renderChanges, setRenderChanges] = useState(false);
   
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -28,7 +29,8 @@ const HomeScreen = ({ navigation }) => {
   const fetchEventsForDate = async (date) => {
     try {
       const eventsCollectionRef = collection(FIRESTORE_DB, "event");
-      const querySnapshot = await getDocs(eventsCollectionRef);
+      const eventsCollectionQuery = query(eventsCollectionRef, where('date', ">=", Timestamp.now()))
+      const querySnapshot = await getDocs(eventsCollectionQuery);
       const fetchedEvents = [];
       const feedFetchedEvents = [];
       querySnapshot.forEach((doc) => {
@@ -42,24 +44,19 @@ const HomeScreen = ({ navigation }) => {
         feedFetchedEvents.push({ id: doc.id, ...doc.data() });
       });
       setEvents(fetchedEvents);
-      setFeedEvents(feedFetchedEvents);
-      console.log(feedEvents);
+      const sortedFeedEvents = feedFetchedEvents.sort((a, b) => a.date.toMillis() - b.date.toMillis());
+      setFeedEvents(sortedFeedEvents);
+
     } catch (error) {
-      console.error("Error fetching events: ", error);
+      console.error("Error Fetching events: ", error);
     }
   };
-  
 
   const handleDateSelect = (date) => {
     setSelectedDate(date);
   };
-  let customFonts = {
-    Convergence: require("../assets/fonts/Convergence-Regular.ttf"),
-    Monoton: require("../assets/fonts/Monoton-Regular.ttf"),
-    Teko: require("../assets/fonts/Teko-VariableFont_wght.ttf"),
-    TekoSemiBold: require("../assets/fonts/Teko-SemiBold.ttf"),
-    TekoMedium: require("../assets/fonts/Teko-Medium.ttf"),
-  };
+
+
   const loadFontsAsync = async () => {
     await Font.loadAsync(customFonts);
     setFontsLoaded(true);
@@ -72,27 +69,40 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     fetchEventsForDate(selectedDate);
-  }, [selectedDate]);
+  }, [selectedDate, renderChanges]);
+
+  // Re-render every 2 seconds
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setRenderChanges((prev) => !prev);
+    }, 2000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   if (!fontsLoaded) {
     return null;
   }
+
   const handleSignOut = () => {
     navigation.navigate("WelcomeScreen");
   };
+  const handleEditProfile=()=>{
+    navigation.navigate("EditProfileStudent");
+  }
+
   return (
     <>
       <View style={styles.mainContainer}>
-        <HeaderBar onSignOut={handleSignOut} />
-        <ScrollView>
+        <HeaderBar onEditProfile={handleEditProfile} onSignOut={handleSignOut} />
+        <ScrollView nestedScrollEnabled={true}>
           <HeaderEvent selectedDate={selectedDate} events={events} />
           <CalendarNew
             selectedDate={selectedDate}
             onSelectDate={handleDateSelect}
           />
           <Divider style={{ marginVertical: 15 }} horizontalInset={true} />
-          <CurrentFeed feedEvents={feedEvents} />
-          {/*  */}
+          <CurrentFeed navigation={navigation} onRenderChanges={setRenderChanges} feedEvents={feedEvents} />
         </ScrollView>
       </View>
     </>
@@ -101,13 +111,9 @@ const HomeScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    // paddingTop: 20,
-    // paddingBottom: 150,
-    // paddingHorizontal: 10,
     flexDirection: "column",
-    // borderRadius: 15,
     backgroundColor: "#F1F0F9",
-    paddingBottom:100
+    paddingBottom: 100,
   },
   calenderContainer: {
     paddingTop: 20,

@@ -16,18 +16,12 @@ import { Octicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import * as Font from "expo-font";
+import { customFonts } from "../Theme";
 import CurrentFeedEvents from "./CurrentFeedEvents";
 
-const CurrentFeed = ({ feedEvents }) => {
+const CurrentFeed = ({ navigation,onRenderChanges, feedEvents }) => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
-  let customFonts = {
-    Convergence: require("../assets/fonts/Convergence-Regular.ttf"),
-    Monoton: require("../assets/fonts/Monoton-Regular.ttf"),
-    Teko: require("../assets/fonts/Teko-VariableFont_wght.ttf"),
-    TekoSemiBold: require("../assets/fonts/Teko-SemiBold.ttf"),
-    TekoMedium: require("../assets/fonts/Teko-Medium.ttf"),
-    TekoLight: require("../assets/fonts/Teko-Light.ttf"),
-  };
+
   const loadFontsAsync = async () => {
     await Font.loadAsync(customFonts);
     setFontsLoaded(true);
@@ -41,7 +35,7 @@ const CurrentFeed = ({ feedEvents }) => {
     return null;
   }
   return (
-    <ScrollView>
+    <View >
       <View style={styles.container}>
         <View style={styles.feedHeader}>
           <View style={styles.feed}>
@@ -56,14 +50,14 @@ const CurrentFeed = ({ feedEvents }) => {
         <View style={styles.listCard}>
           {feedEvents.length > 0 ? (
             feedEvents.map((item) => (
-              <CurrentFeedEvents key={item.id} event={item} />
+              <CurrentFeedEvents navigation={navigation} onRenderChanges={onRenderChanges} key={item.id} event={item} />
             ))
           ) : (
             <Text>No events found.</Text>
           )}
         </View>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 const styles = StyleSheet.create({

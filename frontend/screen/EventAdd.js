@@ -25,7 +25,7 @@ import { getStorage, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { getFirestore, addDoc, collection } from "firebase/firestore";
 import { Timestamp } from "firebase/firestore";
 import { useAuth } from "../AuthContext";
-
+import { customFonts } from "../Theme";
 const EventAdd = ({ navigation }) => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [clubName, setClubName] = useState("");
@@ -47,12 +47,7 @@ const EventAdd = ({ navigation }) => {
   );
   const [formattedTime, setFormattedTime] = useState(format(time, "hh:mm a"));
 
-  let customFonts = {
-    Convergence: require("../assets/fonts/Convergence-Regular.ttf"),
-    Monoton: require("../assets/fonts/Monoton-Regular.ttf"),
-    Teko: require("../assets/fonts/Teko-VariableFont_wght.ttf"),
-    TekoSemiBold: require("../assets/fonts/Teko-SemiBold.ttf"),
-  };
+
   const loadFontsAsync = async () => {
     await Font.loadAsync(customFonts);
     setFontsLoaded(true);

@@ -11,7 +11,7 @@ import {
 import { Feather } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import * as Font from "expo-font";
-
+import { customFonts } from "../Theme";
 import { useAuth } from "../AuthContext";
 const ClubLogin = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -20,13 +20,7 @@ const ClubLogin = ({ navigation }) => {
 
   const { loginClub, loggedIn } = useAuth();
   const [fontsLoaded, setFontsLoaded] = useState(false);
-  let customFonts = {
-    Convergence: require("../assets/fonts/Convergence-Regular.ttf"),
-    Monoton: require("../assets/fonts/Monoton-Regular.ttf"),
-    Teko: require("../assets/fonts/Teko-VariableFont_wght.ttf"),
-    TekoSemiBold: require("../assets/fonts/Teko-SemiBold.ttf"),
-    TekoMedium: require("../assets/fonts/Teko-Medium.ttf"),
-  };
+
   const loadFontsAsync = async () => {
     await Font.loadAsync(customFonts);
     setFontsLoaded(true);

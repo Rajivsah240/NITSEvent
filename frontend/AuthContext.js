@@ -54,14 +54,17 @@ export const AuthProvider = ({ children }) => {
 
       if (userDoc.exists()) {
         const userData = userDoc.data();
-        const { imageURL,name } = userData;
+        const { imageURL,name,department,scholarID,username } = userData;
 
         // Set user state including the image URL
         setUser({
           uid: userCredential.user.uid,
           email: userCredential.user.email,
           imageURL,
-          name
+          name,
+          username,
+          department,
+          scholarID
         });
 
         setLoggedIn(true);

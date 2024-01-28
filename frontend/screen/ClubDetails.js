@@ -15,6 +15,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { EvilIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import * as Font from "expo-font";
+import { customFonts } from "../Theme";
 import { Divider } from "react-native-paper";
 const ClubDetails = ({ navigation }) => {
   const [clubs, setClubs] = useState([]);
@@ -41,14 +42,7 @@ const ClubDetails = ({ navigation }) => {
   };
 
   const [fontsLoaded, setFontsLoaded] = useState(false);
-  let customFonts = {
-    Convergence: require("../assets/fonts/Convergence-Regular.ttf"),
-    Monoton: require("../assets/fonts/Monoton-Regular.ttf"),
-    Teko: require("../assets/fonts/Teko-VariableFont_wght.ttf"),
-    TekoSemiBold: require("../assets/fonts/Teko-SemiBold.ttf"),
-    TekoMedium: require("../assets/fonts/Teko-Medium.ttf"),
-    TekoLight: require("../assets/fonts/Teko-Light.ttf"),
-  };
+
   const loadFontsAsync = async () => {
     await Font.loadAsync(customFonts);
     setFontsLoaded(true);

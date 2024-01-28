@@ -12,9 +12,9 @@ import {
 
 import { useAuth } from "../AuthContext";
 import { FIRESTORE_DB } from "../config/firebase";
-import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
+import { collection, getDoc, where, query, doc,updateDoc } from "firebase/firestore";
 import * as Font from "expo-font";
-
+import { customFonts } from "../Theme";
 const EventRegistrationScreen = ({ navigation, route }) => {
   const { item } = route.params;
   const { user } = useAuth();
@@ -22,13 +22,7 @@ const EventRegistrationScreen = ({ navigation, route }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [fontsLoaded, setFontsLoaded] = useState(false);
-  let customFonts = {
-    Convergence: require("../assets/fonts/Convergence-Regular.ttf"),
-    Monoton: require("../assets/fonts/Monoton-Regular.ttf"),
-    Teko: require("../assets/fonts/Teko-VariableFont_wght.ttf"),
-    TekoSemiBold: require("../assets/fonts/Teko-SemiBold.ttf"),
-    TekoMedium: require("../assets/fonts/Teko-Medium.ttf"),
-  };
+
   const loadFontsAsync = async () => {
     await Font.loadAsync(customFonts);
     setFontsLoaded(true);
@@ -42,94 +36,78 @@ const EventRegistrationScreen = ({ navigation, route }) => {
     return null;
   }
 
-  const checkDuplicateRegistration = async () => {
-    try {
-      const registrationsCollectionRef = collection(
-        FIRESTORE_DB,
-        "registeredEvents"
-      );
+   
 
-      const q = query(
-        registrationsCollectionRef,
-        where("userId", "==", user.uid),
-        where("eventName", "==", item.eventName)
-      );
-      const querySnapshot = await getDocs(q);
-
-      return !querySnapshot.empty; // Returns true if the user has already registered for the event
-    } catch (error) {
-      console.error("Error checking duplicate registration: ", error);
-      return false; // Assume no duplicate if an error occurs
+const handleRegister = async () => {
+  try {
+    if (!user || !user.uid) {
+      console.log("User not authenticated.");
+      return;
     }
-  };
 
-  const handleRegister = async () => {
-    try {
-      // Validate name and email fields
-      if (!name.trim() || !email.trim()) {
-        Alert.alert("Validation Error", "Name and Email cannot be empty.", "", [
-          { text: "OK" },
-        ]);
-        return; // Exit the function if validation fails
-      }
-  
-      const isDuplicate = await checkDuplicateRegistration();
-  
-      if (isDuplicate) {
-        Alert.alert(
-          "Duplicate Registration",
-          "You have already registered for this event.",
-          "",
-          [
-            {
-              text: "OK",
-              onPress: () => {
-                // Navigate back after 1 seconds
-                setTimeout(() => {
-                  navigation.goBack();
-                }, 1000);
-              },
-            },
-          ]
-        );
-      } else {
-        const registrationsCollectionRef = collection(
-          FIRESTORE_DB,
-          "registeredEvents"
-        );
-  
-        await addDoc(registrationsCollectionRef, {
-          userId: user.uid,
-          name,
-          email,
-          eventName: item.eventName,
-          clubName: item.clubName,
-          date:item.date,
-          time:item.time,
-          imageURL:item.imageURL,
-          venue:item.venue
+    const userDocRef = doc(FIRESTORE_DB, 'studentUsers', user.uid);
+    const userSnapshot = await getDoc(userDocRef);
 
-          // Add more fields as needed
-        });
-  
-        Alert.alert("Registration Successful", "", [
+    if (!userSnapshot.exists()) {
+      console.log('User document not found.');
+      return;
+    }
+
+    const userData = userSnapshot.data();
+    const registeredEventsArray = Array.isArray(userData?.registeredEvents)
+      ? userData.registeredEvents
+      : [];
+
+    const isDuplicate = registeredEventsArray.some((event) => event.eventId === item.id);
+
+    if (isDuplicate) {
+      Alert.alert(
+        'Duplicate Registration',
+        'You have already registered for this event.',
+        '',
+        [
           {
-            text: "OK",
+            text: 'OK',
             onPress: () => {
-              // Navigate back after 3 seconds
               setTimeout(() => {
                 navigation.goBack();
               }, 1000);
             },
           },
-        ]);
-      }
-    } catch (error) {
-      console.error("Error registering: ", error);
-  
-      Alert.alert("Error", "Failed to register. Please try again.");
+        ]
+      );
+    } else {
+      const updateUser = {
+        ...userData,
+        registeredEvents: [
+          ...registeredEventsArray,
+          {
+            eventId: item.id,
+          },
+        ],
+      };
+
+      await updateDoc(userDocRef, updateUser);
+      console.log('Registered!!');
+
+      Alert.alert('Registration Successful', '', [
+        {
+          text: 'OK',
+          onPress: () => {
+            setTimeout(() => {
+              navigation.goBack();
+            }, 1000);
+          },
+        },
+      ]);
     }
-  };
+  } catch (error) {
+    console.error('Error registering: ', error);
+
+    Alert.alert('Error', 'Failed to register. Please try again.');
+  }
+};
+
   
 
   return (

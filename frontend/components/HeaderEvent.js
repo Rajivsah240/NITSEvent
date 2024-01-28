@@ -3,16 +3,10 @@ import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { FIRESTORE_DB } from "../config/firebase";
 import * as Font from "expo-font";
+import { customFonts } from "../Theme";
 const HeaderEvent = ({ selectedDate, events }) => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
-  let customFonts = {
-    Convergence: require("../assets/fonts/Convergence-Regular.ttf"),
-    Monoton: require("../assets/fonts/Monoton-Regular.ttf"),
-    Teko: require("../assets/fonts/Teko-VariableFont_wght.ttf"),
-    TekoSemiBold: require("../assets/fonts/Teko-SemiBold.ttf"),
-    TekoMedium: require("../assets/fonts/Teko-Medium.ttf"),
-  };
   const loadFontsAsync = async () => {
     await Font.loadAsync(customFonts);
     setFontsLoaded(true);
@@ -20,7 +14,7 @@ const HeaderEvent = ({ selectedDate, events }) => {
 
   useEffect(() => {
     loadFontsAsync();
-    console.log("date passed in header event: ", selectedDate);
+    // console.log("date passed in header event: ", selectedDate);
   }, [selectedDate]);
 
   if (!fontsLoaded) {

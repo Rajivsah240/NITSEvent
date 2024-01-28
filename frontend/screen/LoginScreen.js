@@ -4,19 +4,14 @@ import { Feather } from "@expo/vector-icons";
 import { AntDesign } from '@expo/vector-icons';
 import { useAuth } from "../AuthContext";
 import * as Font from "expo-font";
+import { customFonts } from "../Theme";
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const { loginStudent, loggedIn } = useAuth();
   const [fontsLoaded, setFontsLoaded] = useState(false);
-  let customFonts = {
-    Convergence: require("../assets/fonts/Convergence-Regular.ttf"),
-    Monoton: require("../assets/fonts/Monoton-Regular.ttf"),
-    Teko: require("../assets/fonts/Teko-VariableFont_wght.ttf"),
-    TekoSemiBold: require("../assets/fonts/Teko-SemiBold.ttf"),
-    TekoMedium: require("../assets/fonts/Teko-Medium.ttf"),
-  };
+
   const loadFontsAsync = async () => {
     await Font.loadAsync(customFonts);
     setFontsLoaded(true);
@@ -105,7 +100,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     paddingHorizontal: 20,
-    backgroundColor: "#102733",
+    backgroundColor: "#fff",
   },
   logoContainer: {
     alignItems: "center",
@@ -117,7 +112,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     marginTop: 10,
-    color:'#A9B2B6',
+    color:'#000000',
     fontFamily:'TekoSemiBold'
   },
   formContainer: {
@@ -127,12 +122,12 @@ const styles = StyleSheet.create({
   input: {
     width:'100%',
     height: 40,
-    borderColor: "#FCCD00",
+    borderColor: "#F1F0F9",
     borderWidth: 1,
     marginBottom: 20,
     paddingLeft: 10,
     borderRadius: 20,
-    color:'#A9B2B6'
+    color:'#000000'
   },
   passwordInputContainer: {
     flexDirection: "row",
@@ -142,12 +137,12 @@ const styles = StyleSheet.create({
   passwordInput: {
     flex: 1,
     height: 40,
-    borderColor: "#FCCD00",
+    borderColor: "#F1F0F9",
     borderWidth: 1,
     marginBottom: 20,
     paddingLeft: 10,
     borderRadius: 20,
-    color:'#A9B2B6'
+    color:'#000000'
   },
   toggleButton: {
     marginLeft: -25,
@@ -155,7 +150,7 @@ const styles = StyleSheet.create({
     left:-10
   },
   loginButton: {
-    backgroundColor: "#FCCD00",
+    backgroundColor: "#F1F0F9",
     padding: 10,
     width:"50%",
     borderRadius: 20,

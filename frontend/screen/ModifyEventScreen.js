@@ -19,7 +19,7 @@ import * as Font from "expo-font";
 
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-
+import { customFonts } from "../Theme";
 import { FIRESTORE_DB, FIREBASE_APP } from "../config/firebase";
 import { getStorage, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import {
@@ -27,7 +27,7 @@ import {
   addDoc,
   collection,
   updateDoc,
-  doc
+  doc,
 } from "firebase/firestore";
 import { Timestamp } from "firebase/firestore";
 import { useAuth } from "../AuthContext";
@@ -45,6 +45,7 @@ const ModifyEventScreen = ({ navigation, route }) => {
   const [venue, setVenue] = useState(item.venue);
   const [image, setImage] = useState(item.imageURL);
   const [imageURL, setImageURL] = useState(item.imageURL);
+  const [imageUploaded, setImageUploaded] = useState(true);
 
   const { user } = useAuth();
 
@@ -53,12 +54,7 @@ const ModifyEventScreen = ({ navigation, route }) => {
   );
   const [formattedTime, setFormattedTime] = useState(format(time, "hh:mm a"));
 
-  let customFonts = {
-    Convergence: require("../assets/fonts/Convergence-Regular.ttf"),
-    Monoton: require("../assets/fonts/Monoton-Regular.ttf"),
-    Teko: require("../assets/fonts/Teko-VariableFont_wght.ttf"),
-    TekoSemiBold: require("../assets/fonts/Teko-SemiBold.ttf"),
-  };
+  
   const loadFontsAsync = async () => {
     await Font.loadAsync(customFonts);
     setFontsLoaded(true);
@@ -71,8 +67,6 @@ const ModifyEventScreen = ({ navigation, route }) => {
       console.log("Item ID:", item.id);
     }
   }, [item]);
-  
-  
 
   if (!fontsLoaded) {
     return null;
@@ -108,6 +102,7 @@ const ModifyEventScreen = ({ navigation, route }) => {
 
       if (!result.canceled) {
         setImage(result.assets[0].uri);
+        setImageUploaded(false);
         console.log("Image URI set:", result.uri);
       }
     } catch (error) {
@@ -131,7 +126,8 @@ const ModifyEventScreen = ({ navigation, route }) => {
 
       console.log("Download URL: ", url);
       setImageURL(url);
-      
+      setImageUploaded(true);
+
       console.log(imageURL);
     } catch (error) {
       console.error("upload error: ", error);
@@ -140,19 +136,16 @@ const ModifyEventScreen = ({ navigation, route }) => {
 
   const handleSubmit = async () => {
     try {
-       await updateDoc(
-        doc(FIRESTORE_DB, "event", item.id),
-        {
-          uid: user.uid,
-          clubName,
-          eventName,
-          description,
-          date: Timestamp.fromDate(date),
-          time: Timestamp.fromDate(time),
-          venue,
-          imageURL,
-        }
-      );
+      await updateDoc(doc(FIRESTORE_DB, "event", item.id), {
+        uid: user.uid,
+        clubName,
+        eventName,
+        description,
+        date: Timestamp.fromDate(date),
+        time: Timestamp.fromDate(time),
+        venue,
+        imageURL,
+      });
       console.log("Document updated Successfully");
       navigation.navigate("ClubHomeScreen");
     } catch (error) {
@@ -244,7 +237,11 @@ const ModifyEventScreen = ({ navigation, route }) => {
           onChangeText={setVenue}
         />
 
-        <Button title="Modify Event" onPress={handleSubmit} />
+        {imageUploaded ? (
+          <Button title="Modify Event" onPress={handleSubmit} />
+        ) : (
+          <Button disabled title="Modify Event"/>
+        )}
       </View>
     </ScrollView>
   );

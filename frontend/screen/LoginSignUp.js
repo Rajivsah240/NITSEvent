@@ -1,7 +1,13 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import {React,useEffect,useState} from "react";
+import {
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { React, useEffect, useState } from "react";
 import * as Font from "expo-font";
-
+import { customFonts } from "../Theme";
 const LoginSignUp = ({ navigation }) => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const handleStudentSignin = () => {
@@ -12,12 +18,7 @@ const LoginSignUp = ({ navigation }) => {
     navigation.navigate("ClubLogin");
   };
 
-  let customFonts = {
-    Convergence: require("../assets/fonts/Convergence-Regular.ttf"),
-    Monoton: require("../assets/fonts/Monoton-Regular.ttf"),
-    Teko: require("../assets/fonts/Teko-VariableFont_wght.ttf"),
-    TekoSemiBold: require("../assets/fonts/Teko-SemiBold.ttf"),
-  };
+
   const loadFontsAsync = async () => {
     await Font.loadAsync(customFonts);
     setFontsLoaded(true);
@@ -32,7 +33,10 @@ const LoginSignUp = ({ navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <ImageBackground
+      style={[styles.container, styles.backgroundImg]}
+      source={require("../assets/images/LoginSignin.jpg")}
+    >
       <View style={styles.headerContainer}>
         <Text style={styles.title}>Welcome to Nits Event!</Text>
         <Text style={styles.accountTxt}>Choose Your Account</Text>
@@ -46,49 +50,50 @@ const LoginSignUp = ({ navigation }) => {
           <Text style={styles.buttonText}>Student</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  container:{
-    flex:1,
-    alignItems:"center",
-    justifyContent:'center',
-    backgroundColor:'#102733'
-
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor:'#fff'
   },
-  headerContainer:{
-    alignItems:'center',
-    paddingVertical:10,
+  backgroundImg: {
+    height: "50%",
     
   },
+  headerContainer: {
+    alignItems: "center",
+    paddingVertical: 10,
+  },
   btnContainer: {
-    flexDirection:'row',
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
   },
   title: {
-    fontSize:35,
-    fontFamily:'TekoSemiBold',
-    color:'#A9B2B6'
+    fontSize: 35,
+    fontFamily: "TekoSemiBold",
+    color: "#000000",
   },
-  accountTxt:{
-    fontFamily:"Convergence",
-    color:'#A9B2B6'
+  accountTxt: {
+    fontFamily: "Convergence",
+    color: "#A9B2B6",
   },
   button: {
-    backgroundColor: "#FCCD00",
+    backgroundColor: "#F1F0F9",
     padding: 10,
     margin: 5,
     borderRadius: 5,
-    
   },
   buttonText: {
-    color:'#5D6D78',
+    color: "#000000",
     fontSize: 18,
     textAlign: "center",
-    fontFamily:'Convergence'
+    fontFamily: "Convergence",
   },
 });
 

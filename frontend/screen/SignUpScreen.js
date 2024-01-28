@@ -7,25 +7,17 @@ import { getStorage, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { createUserWithEmailAndPassword,getAuth } from "firebase/auth";
 import { doc,setDoc } from "firebase/firestore";
 import * as Font from "expo-font";
-
+import { customFonts } from "../Theme";
 const SignUpScreen = ({navigation}) => {
   const [name, setname] = useState("");
   const [email, setemail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [profilePic, setprofilePic] = useState("");
-  
-
   const [imageURL, setImageURL] = useState("");
   const [uploaded, setUploaded] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
-  let customFonts = {
-    Convergence: require("../assets/fonts/Convergence-Regular.ttf"),
-    Monoton: require("../assets/fonts/Monoton-Regular.ttf"),
-    Teko: require("../assets/fonts/Teko-VariableFont_wght.ttf"),
-    TekoSemiBold: require("../assets/fonts/Teko-SemiBold.ttf"),
-    TekoMedium: require("../assets/fonts/Teko-Medium.ttf"),
-  };
+
   const loadFontsAsync = async () => {
     await Font.loadAsync(customFonts);
     setFontsLoaded(true);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { View, StyleSheet } from "react-native";
+import { customFonts } from "../Theme";
 import {
   Avatar,
   Title,
@@ -14,40 +15,36 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { useAuth } from "../AuthContext";
 import { FIRESTORE_DB } from "../config/firebase";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDoc,doc } from "firebase/firestore";
 import * as Font from "expo-font";
 const ProfileScreen = ({ navigation }) => {
   const { logout, loggedIn, user } = useAuth();
-  const [event, setRegisteredEvents] = useState([]);
+  const [registeredEvents, setRegisteredEvents] = useState([]);
   const [registeredEventsCount, setRegisteredEventsCount] = useState(0);
   const name = user ? user.name : '';
   const email = user ? user.email : '';
   const [fontsLoaded, setFontsLoaded] = useState(false);
-  let customFonts = {
-    Convergence: require("../assets/fonts/Convergence-Regular.ttf"),
-    Monoton: require("../assets/fonts/Monoton-Regular.ttf"),
-    Teko: require("../assets/fonts/Teko-VariableFont_wght.ttf"),
-    TekoSemiBold: require("../assets/fonts/Teko-SemiBold.ttf"),
-    TekoMedium: require("../assets/fonts/Teko-Medium.ttf"),
-  };
+  const [dataFetched, setDataFetched] = useState(false);
+  
 
   const fetchRegisteredEventsCount = async () => {
     try {
-      const registeredEventsCollectionRef = collection(
-        FIRESTORE_DB,
-        "registeredEvents"
-      );
-      const q = query(
-        registeredEventsCollectionRef,
-        where("userId", "==", user.uid)
-      );
-      const querySnapshot = await getDocs(q);
-      const fetchedEvents = [];
-      querySnapshot.forEach((doc) => {
-        fetchedEvents.push(doc.data());
-      });
-      setRegisteredEvents(fetchedEvents);
-      setRegisteredEventsCount(querySnapshot.size);
+      const userDocRef = doc(FIRESTORE_DB, "studentUsers", user.uid);
+      const userSnapshot = await getDoc(userDocRef);
+
+    if (!userSnapshot.exists()) {
+      console.log('User document not found.');
+      return;
+    }
+
+    const userData = userSnapshot.data();
+    const registeredEventsArray = Array.isArray(userData?.registeredEvents)
+      ? userData.registeredEvents
+      : [];
+
+      setRegisteredEvents(registeredEventsArray);
+      setRegisteredEventsCount(registeredEventsArray.length);
+      setDataFetched(true); 
     } catch (error) {
       console.error("Error fetching registered events count: ", error);
     }
@@ -57,21 +54,36 @@ const ProfileScreen = ({ navigation }) => {
     setFontsLoaded(true);
   };
 
+  useEffect(()=>{
+    fetchRegisteredEventsCount();
+    console.log("Reg Event",registeredEvents)
+  },[])
+
   useEffect(() => {
     if (!loggedIn) {
       navigation.navigate("WelcomeScreen");
     } else {
-      fetchRegisteredEventsCount();
+      const fetchData = async () => {
+        await loadFontsAsync();
+        await fetchRegisteredEventsCount();
+      };
+  
+      fetchData();
+      console.log("Id:",user.uid);
+      console.log("Counts",registeredEventsCount);
+      console.log("Events:",registeredEvents);
     }
-  }, [loggedIn]);
+  }, [loggedIn,navigation]);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      fetchRegisteredEventsCount();
-      loadFontsAsync();
-    }, [navigation])
-  );
-  if (!fontsLoaded) {
+
+
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     fetchRegisteredEventsCount();
+  //     loadFontsAsync();
+  //   }, [navigation])
+  // );
+  if (!fontsLoaded || !dataFetched) {
     return null;
   }
 
@@ -112,7 +124,7 @@ const ProfileScreen = ({ navigation }) => {
       <Drawer.Section style={styles.drawerSection}>
         <TouchableRipple
           onPress={() => {
-            navigation.navigate("RegisteredEvents", { event });
+            navigation.navigate("RegisteredEvents", { registeredEvents });
           }}
         >
           <View style={styles.drawerItem}>
@@ -162,9 +174,9 @@ const styles = StyleSheet.create({
   },
   drawerItemText: {
     paddingLeft: 5,
-    fontSize: 18,
+    fontSize: 23,
     color: "#000000",
-    fontFamily:'TekoMedium'
+    fontFamily:'TekoLight'
   },
 
   eventBox: {
@@ -182,8 +194,8 @@ const styles = StyleSheet.create({
   },
 
   eventLabel: {
-    fontSize: 14,
-    fontWeight: "bold",
+    fontSize: 24,
+    fontFamily:'TekoLight',
     color: "#000000",
   },
 
