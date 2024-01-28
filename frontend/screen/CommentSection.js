@@ -22,6 +22,7 @@ const CommentSection = ({ navigation,route }) => {
   const { user } = useAuth();
   const event = route.params;
   const eventId = event.event.id;
+  const [comments, setComments] = useState(event.event.comments || []);
   const userId = user.uid;
   // console.log(event);
   const [isCommentModalVisible, setIsCommentModalVisible] = useState(true);
@@ -31,6 +32,8 @@ const CommentSection = ({ navigation,route }) => {
     setIsCommentModalVisible(!isCommentModalVisible);
     navigation.navigate("Tab")
   };
+
+
 
   const slideUp = () => {
     Animated.timing(translateY, {
@@ -76,10 +79,17 @@ const CommentSection = ({ navigation,route }) => {
           },
         ],
       };
-
+      const newComment = {
+        userId,
+        username: user.username,
+        comment,
+        date: Timestamp.now(),
+        time: Timestamp.now(),
+      };
+      setComment("");
+      setComments([...comments, newComment]);
       await updateDoc(eventRef, updatedEvent);
       console.log("Commented!!");
-      setComment("");
       //   onRenderChanges(true);
     } catch (error) {
       console.error("Error Posting Comment!!");
@@ -125,8 +135,8 @@ const CommentSection = ({ navigation,route }) => {
             <Divider style={{ marginVertical: 10 }} horizontalInset={true} />
           <ScrollView style={styles.commentList}>
             {/* <View style={styles.commentContent}> */}
-              {event.event.comments &&
-                event.event.comments.map((item) => (
+              {comments &&
+                comments.map((item) => (
                   <View style={styles.commentCard} key={item.time}>
                     <Text style={styles.useridTxt}>{item.username}</Text>
                     <View>

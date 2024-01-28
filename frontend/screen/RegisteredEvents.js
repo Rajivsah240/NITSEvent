@@ -77,7 +77,7 @@ const RegisteredEvents = ({ navigation, route }) => {
           <View style={styles.listCard}>
             {events.length > 0 ? (
               events.map((item) => (
-                <CurrentFeedEvents key={item.id} event={item} />
+                <CurrentFeedEvents navigation={navigation} key={item.id} event={item} />
               ))
             ) : (
               <Text>No events found.</Text>

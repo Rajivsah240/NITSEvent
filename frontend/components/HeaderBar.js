@@ -10,12 +10,17 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import GradientBGIcon from "./GradientBGIcon";
+import { AntDesign } from "@expo/vector-icons";
+import { MaterialIcons } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 import ProfilePic from "./ProfilePic";
 import { useAuth } from "../AuthContext";
 import * as Font from "expo-font";
-import { Avatar } from "react-native-paper";
+import { Avatar, Divider } from "react-native-paper";
 import { customFonts } from "../Theme";
-const HeaderBar = ({onEditProfile, onSignOut }) => {
+import { FIRESTORE_DB } from "../config/firebase";
+import { collection, query, where, getDoc,doc } from "firebase/firestore";
+const HeaderBar = ({ navigation,onShowBookmarks, onEditProfile, onSignOut }) => {
   const [showSignout, setShowSignout] = useState(false);
   const { logout, loggedIn, user } = useAuth();
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -25,6 +30,8 @@ const HeaderBar = ({onEditProfile, onSignOut }) => {
   const name = user ? user.name : "";
   const email = user ? user.email : "";
 
+  const [registeredEvents, setRegisteredEvents] = useState([]);
+  const [registeredEventsCount, setRegisteredEventsCount] = useState(0);
 
   const loadFontsAsync = async () => {
     await Font.loadAsync(customFonts);
@@ -35,10 +42,32 @@ const HeaderBar = ({onEditProfile, onSignOut }) => {
     loadFontsAsync();
   }, []);
 
-  // if (!fontsLoaded) {
-  //   return null;
-  // }
+  const fetchRegisteredEventsCount = async () => {
+    try {
+      const userDocRef = doc(FIRESTORE_DB, "studentUsers", user.uid);
+      const userSnapshot = await getDoc(userDocRef);
 
+    if (!userSnapshot.exists()) {
+      console.log('User document not found.');
+      return;
+    }
+
+    const userData = userSnapshot.data();
+    const registeredEventsArray = Array.isArray(userData?.registeredEvents)
+      ? userData.registeredEvents
+      : [];
+
+      setRegisteredEvents(registeredEventsArray);
+      setRegisteredEventsCount(registeredEventsArray.length);
+      // setDataFetched(true); 
+    } catch (error) {
+      console.error("Error fetching registered events count: ", error);
+    }
+  };
+  useEffect(()=>{
+    fetchRegisteredEventsCount();
+    // console.log("Reg Event",registeredEvents)
+  },[])
 
   useEffect(() => {
     if (menuVisible) {
@@ -100,9 +129,13 @@ const HeaderBar = ({onEditProfile, onSignOut }) => {
     onSignOut();
   };
 
-  const handleEditProfilePress = ()=>{
+  const handleEditProfilePress = () => {
     onEditProfile();
-  }
+  };
+
+  const handleShowBookmarksPress = () => {
+    onShowBookmarks();
+  };
 
   return (
     <View style={styles.HeaderContainer}>
@@ -125,36 +158,37 @@ const HeaderBar = ({onEditProfile, onSignOut }) => {
             ]}
           >
             <TouchableOpacity style={styles.menuProfileContainer}>
-              <Avatar.Image
-              source={{uri:user.imageURL}}
-              size={60}
-              />
+              <Avatar.Image source={{ uri: user.imageURL }} size={60} />
               <Text style={styles.menuHeaderText}>{name}</Text>
             </TouchableOpacity>
+            <Divider style={{ marginVertical: 20 }} horizontalInset={true} />
             <TouchableOpacity
               style={styles.menuItem}
               onPress={handleEditProfilePress}
             >
-              <Text>Edit Profile</Text>
+              <AntDesign name="edit" size={20} color="black" />
+              <Text> Edit Profile</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.menuItem}
-              onPress={() => console.log("Registered Events")}
+              onPress={()=>{navigation.navigate("RegisteredEvents",{registeredEvents})}}
             >
-              <Text>Registered Events</Text>
+              <MaterialIcons name="emoji-events" size={20} color="black" />
+              <Text> Registered Events</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.menuItem}
-              onPress={() => console.log("Bookmarks")}
+              onPress={handleShowBookmarksPress}
             >
-              <Text>Bookmarks</Text>
+              <Entypo name="bookmarks" size={20} color="black" />
+              <Text> Bookmarks</Text>
             </TouchableOpacity>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.menuSignoutBtn}
               onPress={handleSignoutPress}
             >
               <Text style={styles.menuSignoutText}>Log Out</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </Animated.View>
         </>
       )}
@@ -186,20 +220,20 @@ const styles = StyleSheet.create({
   },
   menuContainer: {
     position: "absolute",
-    left: 0,
-    top: 0,
+    left: '25%',
+    top: '325%',
     height: "1000%",
-    width: "100%",
+    width: "70%",
     backgroundColor: "white",
     padding: 20,
     zIndex: 10,
-    borderBottomRightRadius:10,
-    borderTopRightRadius:10
+    borderBottomRightRadius: 10,
+    borderTopRightRadius: 10,
   },
   menuProfileContainer: {
     flexDirection: "column",
     alignItems: "center",
-    marginBottom: 20,
+    // marginBottom: 20,
   },
   overlay: {
     position: "absolute",
@@ -212,12 +246,13 @@ const styles = StyleSheet.create({
   menuHeaderText: {
     marginTop: 10,
     fontFamily: "TekoLight",
-    fontSize:25,
-    
+    fontSize: 25,
   },
   menuItem: {
     marginBottom: 15,
+    
     fontSize: 20,
+    flexDirection: "row",
   },
   menuSignoutBtn: {
     position: "absolute",

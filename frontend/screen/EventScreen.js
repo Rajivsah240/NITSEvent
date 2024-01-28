@@ -21,7 +21,7 @@ const EventScreen = ({ navigation }) => {
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [fontsLoaded, setFontsLoaded] = useState(false);
-
+  const [renderChanges, setRenderChanges] = useState(false);
   const loadFontsAsync = async () => {
     await Font.loadAsync(customFonts);
     setFontsLoaded(true);
@@ -49,6 +49,12 @@ const EventScreen = ({ navigation }) => {
     fetchEvents();
   }, []);
 
+  useEffect(() => {
+    loadFontsAsync();
+    fetchEvents();
+  }, [renderChanges]);
+
+
   useFocusEffect(
     React.useCallback(() => {
       fetchEvents();
@@ -66,6 +72,9 @@ const EventScreen = ({ navigation }) => {
     );
     setFilteredEvents(filtered);
   };
+
+
+  
 
   return (
     <View style={{ flex: 1, backgroundColor: "#F1F0F9" }}>
@@ -108,7 +117,7 @@ const EventScreen = ({ navigation }) => {
           filteredEvents.map((item) => (
             <CurrentFeedEvents
               navigation={navigation}
-              
+              onRenderChanges={setRenderChanges}
               key={item.id}
               event={item}
             />

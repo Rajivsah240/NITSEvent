@@ -1,21 +1,36 @@
-import React, { useState,useEffect } from "react";
-import {View,Text,TextInput,StyleSheet,Button,TouchableOpacity,Image,Alert} from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  Button,
+  TouchableOpacity,
+  Image,
+  Alert,
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import {FIREBASE_AUTH, FIRESTORE_DB, FIREBASE_APP} from "../config/firebase";
+import { FIREBASE_AUTH, FIRESTORE_DB, FIREBASE_APP } from "../config/firebase";
 
 import { getStorage, getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { createUserWithEmailAndPassword,getAuth } from "firebase/auth";
-import { doc,setDoc } from "firebase/firestore";
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import * as Font from "expo-font";
 import { customFonts } from "../Theme";
-const SignUpScreen = ({navigation}) => {
+import { Avatar, Divider } from "react-native-paper";
+const SignUpScreen = ({ navigation }) => {
   const [name, setname] = useState("");
   const [email, setemail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [department, setDepartment] = useState("");
+  const [scholarID, setScholarID] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [profilePic, setprofilePic] = useState("");
+  const [profilePic, setprofilePic] = useState(
+    "https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg"
+  );
   const [imageURL, setImageURL] = useState("");
-  const [uploaded, setUploaded] = useState(false);
+  const [uploaded, setUploaded] = useState(true);
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
   const loadFontsAsync = async () => {
@@ -44,6 +59,7 @@ const SignUpScreen = ({navigation}) => {
 
       if (!result.canceled) {
         setprofilePic(result.assets[0].uri);
+        setUploaded(false);
         console.log("Image URI set:", result.uri);
       }
     } catch (error) {
@@ -81,6 +97,18 @@ const SignUpScreen = ({navigation}) => {
         throw new Error("Passwords don't match");
       }
 
+      if (
+        !email ||
+        !name ||
+        !password ||
+        !confirmPassword ||
+        !username ||
+        !department ||
+        !scholarID
+      ) {
+        throw new Error("Complete the Form!!");
+      }
+
       // Create a new user in Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(
         FIREBASE_AUTH,
@@ -95,12 +123,15 @@ const SignUpScreen = ({navigation}) => {
         name,
         email,
         imageURL,
+        department,
+        username,
+        scholarID,
       });
 
       console.log("SignUp successful!");
       navigation.navigate("LoginScreen");
     } catch (error) {
-        Alert.alert(error.message);
+      Alert.alert(error.message);
       console.error("SignUp failed", error.message);
     }
   };
@@ -108,6 +139,36 @@ const SignUpScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Student Sign Up</Text>
+      {/* <Divider style={{marginVertical:20}} horizontalInset={true}/> */}
+      {profilePic && (
+        <View style={{ alignItems: "center" }}>
+          <Avatar.Image
+            source={{ uri: profilePic }}
+            style={styles.imagePreview}
+          />
+          <TouchableOpacity
+            style={styles.imageUploadButton}
+            onPress={handleImageUpload}
+          >
+            <Text style={styles.imageUploadText}>Pick a Profile Image</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#F1F0F9",
+              marginVertical: 0,
+              borderWidth: 0.2,
+            }}
+            onPress={uploadImage}
+          >
+            <Text style={{fontSize:8}}>Upload Image</Text>
+          </TouchableOpacity>
+          <Text style={{ fontSize: 8, marginVertical: 10 }}>
+            (Upload First to SignUp!!)
+          </Text>
+          
+        </View>
+      )}
+      {}
       <TextInput
         placeholder="Name"
         placeholderTextColor={"#A9B2B6"}
@@ -137,30 +198,43 @@ const SignUpScreen = ({navigation}) => {
         onChangeText={setConfirmPassword}
         value={confirmPassword}
         style={styles.input}
-        secureTextEntry
       />
-      <TouchableOpacity
-        style={styles.imageUploadButton}
-        onPress={handleImageUpload}
-      >
-        <Text style={styles.imageUploadText}>Pick an Image</Text>
-      </TouchableOpacity>
+      <TextInput
+        placeholder="Username"
+        placeholderTextColor={"#A9B2B6"}
+        onChangeText={setUsername}
+        value={username}
+        style={styles.input}
+      />
+      <TextInput
+        placeholder="Department"
+        placeholderTextColor={"#A9B2B6"}
+        onChangeText={setDepartment}
+        value={department}
+        style={styles.input}
+      />
+      <TextInput
+        placeholder="Scholar ID"
+        placeholderTextColor={"#A9B2B6"}
+        onChangeText={setScholarID}
+        value={scholarID}
+        style={styles.input}
+      />
 
-      {profilePic && (
-        <View style={{ alignItems: "center" }}>
-          <Image source={{ uri: profilePic }} style={styles.imagePreview} />
-          <TouchableOpacity
-            style={{ backgroundColor: "blue", marginVertical: 5 }}
-            onPress={uploadImage}
-          >
-            <Text>Upload Image</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-      
-      <TouchableOpacity style={styles.signupBtn} onPress={handleSignUp}>
+      {uploaded ? (
+        <TouchableOpacity style={styles.signupBtn} onPress={handleSignUp}>
           <Text style={styles.buttonText}>Sign Up</Text>
         </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          style={styles.signupBtn}
+          onPress={() => {
+            Alert.alert("Image Not Uploaded");
+          }}
+        >
+          <Text style={styles.buttonText}>Sign Up</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -171,34 +245,35 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 20,
-    backgroundColor:'#102733'
+    backgroundColor: "#fff",
   },
   title: {
     fontSize: 30,
     marginBottom: 20,
-    color:"#A9B2B6",
-    fontFamily:'TekoSemiBold'
+    color: "#000000",
+    fontFamily: "TekoLight",
   },
   input: {
     width: "100%",
-    height: 40,
-    borderColor: "#FCCD00",
-    borderWidth: 1,
+    height: 35,
+    borderColor: "#A9B2B6",
+    borderWidth: 0.5,
     marginBottom: 20,
     paddingLeft: 10,
     borderRadius: 20,
-    color:'#A9B2B6'
+    color: "#A9B2B6",
   },
   imageUploadButton: {
-    backgroundColor: "#283F4D",
-    padding: 10,
+    backgroundColor: "#F1F0F9",
+    padding: 8,
     borderRadius: 5,
-    marginBottom: 20,
+    marginVertical: 10,
   },
   imageUploadText: {
-    color: "#FCCD00",
+    color: "#000000",
+    fontSize: 10,
     textAlign: "center",
-    fontFamily:'Convergence'
+    fontFamily: "Convergence",
   },
   imagePreview: {
     width: 50,
@@ -207,19 +282,19 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   signupBtn: {
-    backgroundColor: "#FCCD00",
+    backgroundColor: "#F1F0F9",
     padding: 10,
-    width:"50%",
+    width: "50%",
     borderRadius: 20,
     alignItems: "center",
-    justifyContent:'center',
+    justifyContent: "center",
     marginBottom: 10,
   },
 
   buttonText: {
     color: "black",
     fontSize: 16,
-    fontFamily:'Convergence'
+    fontFamily: "Convergence",
   },
 });
 

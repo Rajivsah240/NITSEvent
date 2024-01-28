@@ -32,12 +32,13 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useAuth } from "../AuthContext";
 import CommentSection from "../screen/CommentSection";
 import { customFonts } from "../Theme";
-const CurrentFeedEvents = ({ navigation,onRenderChanges, event }) => {
+const CurrentFeedEvents = ({ navigation, onRenderChanges, event }) => {
   const eventId = event.id;
-  const { user } = useAuth();
+  const { loggedIn, user } = useAuth();
   const userId = user.uid;
   const like = event.likes && event.likes.includes(userId);
   const [liked, setLiked] = useState(null);
+  const [bookmarked, setBookmarked] = useState(false);
   const [clubDetails, setClubDetails] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showComments, setShowComments] = useState(false);
@@ -51,6 +52,10 @@ const CurrentFeedEvents = ({ navigation,onRenderChanges, event }) => {
 
   const [showAddOptions, setShowAddOptions] = useState(false);
 
+  // if(!loggedIn)
+  // {
+  //   return null;
+  // }
 
   const loadFontsAsync = async () => {
     await Font.loadAsync(customFonts);
@@ -79,7 +84,7 @@ const CurrentFeedEvents = ({ navigation,onRenderChanges, event }) => {
       await updateDoc(eventRef, updatedEvent);
       console.log("Like Removed!!");
       setLiked(false);
-      onRenderChanges(true);
+      onRenderChanges((prev) => !prev);
     } catch (error) {
       console.error("Error removing like: ", error);
     }
@@ -109,7 +114,7 @@ const CurrentFeedEvents = ({ navigation,onRenderChanges, event }) => {
         console.log("Liked!!");
         console.log(updatedEvent);
         setLiked(true);
-        onRenderChanges(true);
+        onRenderChanges((prev) => !prev);
       } else {
         console.log("User already liked this event");
       }
@@ -158,19 +163,26 @@ const CurrentFeedEvents = ({ navigation,onRenderChanges, event }) => {
       const bookmarkArray = Array.isArray(userData?.bookmarks)
         ? userData.bookmarks
         : [];
+      const isEventAlreadyBookmarked = bookmarkArray.some(
+        (bookmark) => bookmark.eventId === event.id
+      );
 
-      const updateUser = {
-        ...userData,
-        bookmarks: [
-          ...bookmarkArray,
-          {
-            eventId: event.id,
-          },
-        ],
-      };
-
-      await updateDoc(userDocRef, updateUser);
-      console.log("BookMarked!!");
+      if (!isEventAlreadyBookmarked) {
+        const updateUser = {
+          ...userData,
+          bookmarks: [
+            ...bookmarkArray,
+            {
+              eventId: event.id,
+            },
+          ],
+        };
+        await updateDoc(userDocRef, updateUser);
+        setBookmarked(true);
+        console.log("BookMarked!!");
+      } else {
+        console.log("Already Bookmarked!!");
+      }
     } catch (error) {
       console.log("There was an issue with saving the bookmark", error.message);
     }
@@ -205,8 +217,7 @@ const CurrentFeedEvents = ({ navigation,onRenderChanges, event }) => {
   };
 
   const handleShowComments = () => {
-
-    navigation.navigate("CommentSection",{event})
+    navigation.navigate("CommentSection", { event });
   };
 
   const handleShare = async () => {
@@ -262,15 +273,16 @@ const CurrentFeedEvents = ({ navigation,onRenderChanges, event }) => {
         )}
       </View>
       <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("DetailScreenStudent", { event });
-            }}
-          >
-      <Image
-        source={{ uri: event.imageURL }}
-        style={styles.image}
-        resizeMode="cover"
-      /></TouchableOpacity>
+        onPress={() => {
+          navigation.navigate("DetailScreenStudent", { event });
+        }}
+      >
+        <Image
+          source={{ uri: event.imageURL }}
+          style={styles.image}
+          resizeMode="cover"
+        />
+      </TouchableOpacity>
 
       <View style={styles.eventDetails}>
         <View style={styles.eventDateTime}>
@@ -348,7 +360,7 @@ const CurrentFeedEvents = ({ navigation,onRenderChanges, event }) => {
                 color="black"
               />
             </TouchableOpacity>
-            <Text>{event.comments?event.comments.length : 0}</Text>
+            <Text>{event.comments ? event.comments.length : 0}</Text>
           </View>
           <View style={styles.reach}>
             {liked === true ? (
@@ -377,12 +389,21 @@ const CurrentFeedEvents = ({ navigation,onRenderChanges, event }) => {
               >
                 <Entypo name="share" size={20} color="black" />
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={handleBookmark}
-                style={{ paddingHorizontal: 10 }}
-              >
-                <Fontisto name="bookmark" size={20} color="black" />
-              </TouchableOpacity>
+              {bookmarked == false ? (
+                <TouchableOpacity
+                  onPress={handleBookmark}
+                  style={{ paddingHorizontal: 10 }}
+                >
+                  <Fontisto name="bookmark" size={20} color="black" />
+                </TouchableOpacity>
+              ) : (
+                <Entypo
+                  onPress={() => setBookmarked(false)}
+                  name="bookmark"
+                  size={20}
+                  color="black"
+                />
+              )}
             </View>
           )}
         </View>

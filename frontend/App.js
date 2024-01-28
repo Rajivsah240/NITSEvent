@@ -28,6 +28,7 @@ import EventNotificationEditScreen from './screen/EventNotificationEditScreen';
 import CurrentFeedEvents from './components/CurrentFeedEvents';
 import CommentSection from './screen/CommentSection';
 import EditProfileStudent from './screen/EditProfileStudent';
+import BookmarkEvents from './screen/BookmarkEvents';
 
 
 
@@ -59,6 +60,7 @@ const App = () => {
         <Stack.Screen name="EventNotificationEditScreen" component={EventNotificationEditScreen}/>
         <Stack.Screen name="CommentSection" component={CommentSection}/>
         <Stack.Screen name="EditProfileStudent" component={EditProfileStudent}/>
+        <Stack.Screen name="BookmarkEvents" component={BookmarkEvents}/>
         <Stack.Screen
           name="Tab"
           component={TabNavigator}

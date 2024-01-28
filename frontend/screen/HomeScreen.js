@@ -91,10 +91,15 @@ const HomeScreen = ({ navigation }) => {
     navigation.navigate("EditProfileStudent");
   }
 
+
+  const handleShowBookmarks=()=>{
+    navigation.navigate("BookmarkEvents")
+  }
+
   return (
     <>
       <View style={styles.mainContainer}>
-        <HeaderBar onEditProfile={handleEditProfile} onSignOut={handleSignOut} />
+        <HeaderBar navigation={navigation} onShowBookmarks={handleShowBookmarks} onEditProfile={handleEditProfile} onSignOut={handleSignOut} />
         <ScrollView nestedScrollEnabled={true}>
           <HeaderEvent selectedDate={selectedDate} events={events} />
           <CalendarNew
