@@ -29,6 +29,7 @@ import CurrentFeedEvents from './components/CurrentFeedEvents';
 import CommentSection from './screen/CommentSection';
 import EditProfileStudent from './screen/EditProfileStudent';
 import BookmarkEvents from './screen/BookmarkEvents';
+import EditProfileClub from './screen/EditProfileClub';
 
 
 
@@ -61,6 +62,7 @@ const App = () => {
         <Stack.Screen name="CommentSection" component={CommentSection}/>
         <Stack.Screen name="EditProfileStudent" component={EditProfileStudent}/>
         <Stack.Screen name="BookmarkEvents" component={BookmarkEvents}/>
+        <Stack.Screen name="EditProfileClub" component={EditProfileClub}/>
         <Stack.Screen
           name="Tab"
           component={TabNavigator}

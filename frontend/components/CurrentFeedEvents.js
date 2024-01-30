@@ -34,7 +34,8 @@ import CommentSection from "../screen/CommentSection";
 import { customFonts } from "../Theme";
 const CurrentFeedEvents = ({ navigation, onRenderChanges, event }) => {
   const eventId = event.id;
-  const { loggedIn, user } = useAuth();
+  const { loggedIn,currentUser ,user } = useAuth();
+  const db = currentUser!=='Club'?"studentUsers":"clubUsers"
   const userId = user.uid;
   const like = event.likes && event.likes.includes(userId);
   const [liked, setLiked] = useState(null);
@@ -151,7 +152,7 @@ const CurrentFeedEvents = ({ navigation, onRenderChanges, event }) => {
         return;
       }
 
-      const userDocRef = doc(FIRESTORE_DB, "studentUsers", user.uid);
+      const userDocRef = doc(FIRESTORE_DB, db, user.uid);
       const userSnapshot = await getDoc(userDocRef);
 
       if (!userSnapshot.exists()) {
@@ -209,7 +210,7 @@ const CurrentFeedEvents = ({ navigation, onRenderChanges, event }) => {
   }
 
   if (!fontsLoaded || loading) {
-    return <Text>Loading</Text>;
+    return <Text></Text>;
   }
 
   const handleAddOptions = () => {
@@ -289,13 +290,7 @@ const CurrentFeedEvents = ({ navigation, onRenderChanges, event }) => {
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <FontAwesome5 name="calendar-alt" size={15} color="#000000" />
             <Text
-              style={{
-                fontSize: 15,
-                color: "#000000",
-                paddingLeft: 7,
-                fontFamily: "TekoMedium",
-                paddingTop: 2,
-              }}
+              style={styles.eventDetailsStyles}
             >
               {formattedDate}
             </Text>
@@ -303,13 +298,7 @@ const CurrentFeedEvents = ({ navigation, onRenderChanges, event }) => {
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Feather name="watch" size={15} color="#000000" />
             <Text
-              style={{
-                fontSize: 15,
-                color: "#000000",
-                paddingLeft: 7,
-                fontFamily: "TekoMedium",
-                paddingTop: 2,
-              }}
+              style={styles.eventDetailsStyles}
             >
               {formattedTime}
             </Text>
@@ -319,13 +308,7 @@ const CurrentFeedEvents = ({ navigation, onRenderChanges, event }) => {
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <EvilIcons name="location" size={15} color="#000000" />
             <Text
-              style={{
-                fontSize: 15,
-                color: "#000000",
-                paddingLeft: 7,
-                fontFamily: "TekoMedium",
-                paddingTop: 2,
-              }}
+              style={styles.eventDetailsStyles}
             >
               {event.venue}
             </Text>
@@ -333,13 +316,7 @@ const CurrentFeedEvents = ({ navigation, onRenderChanges, event }) => {
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Octicons name="organization" size={15} color="#000000" />
             <Text
-              style={{
-                fontSize: 15,
-                color: "#000000",
-                paddingLeft: 7,
-                fontFamily: "TekoMedium",
-                paddingTop: 2,
-              }}
+              style={styles.eventDetailsStyles}
             >
               {event.clubName}
             </Text>
@@ -349,7 +326,7 @@ const CurrentFeedEvents = ({ navigation, onRenderChanges, event }) => {
         <View style={styles.interactSection}>
           <View style={styles.reach}>
             <AntDesign name="areachart" size={20} color="black" />
-            <Text> 0</Text>
+            <Text> {event.registeredStudents?event.registeredStudents.length : 0}</Text>
           </View>
           <View style={styles.reach}>
             <TouchableOpacity onPress={handleShowComments}>
@@ -430,6 +407,13 @@ const styles = StyleSheet.create({
   postDateTime: {
     fontSize: 10,
   },
+  eventDetailsStyles:{
+    fontSize: 13,
+    color: "#000000",
+    paddingLeft: 7,
+    fontFamily: "TekoLight",
+    paddingTop: 2,
+  },
   eventDescription: {
     marginHorizontal: 10,
     marginVertical: 10,
@@ -450,14 +434,14 @@ const styles = StyleSheet.create({
   cardContainer: {
     // height: 300,
     //  marginHorizontal: 7,
-    width: 300,
+    width: 250,
     marginVertical: 10,
     backgroundColor: "#fff",
     borderRadius: 15,
   },
   image: {
     width: "100%",
-    height: 190,
+    height: 150,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
   },

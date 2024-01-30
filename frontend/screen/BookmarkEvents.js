@@ -17,7 +17,7 @@ import * as Font from "expo-font";
 import { Divider } from "react-native-paper";
 const BookmarkEvents = ({ navigation }) => {
   const [bookmarkEvents, setBookmarkEvents] = useState([]);
-  const { user } = useAuth();
+  const { user,currentUser } = useAuth();
   const [events, setEvents] = useState([]);
   
   const [fontsLoaded, setFontsLoaded] = useState(false);

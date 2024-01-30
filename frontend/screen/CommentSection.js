@@ -13,13 +13,15 @@ import {
 import { parseISO, format } from "date-fns";
 import { Divider } from "react-native-paper";
 import { MaterialIcons } from "@expo/vector-icons";
+import { Octicons } from '@expo/vector-icons';
 import { useAuth } from "../AuthContext";
 import { getDoc, doc, updateDoc, Timestamp } from "firebase/firestore";
 import { FIRESTORE_DB } from "../config/firebase";
 
 const CommentSection = ({ navigation,route }) => {
   const [comment, setComment] = useState("");
-  const { user } = useAuth();
+  const { user,currentUser } = useAuth();
+  const username = currentUser!=='student'?user.clubName:user.username;
   const event = route.params;
   const eventId = event.event.id;
   const [comments, setComments] = useState(event.event.comments || []);
@@ -30,7 +32,7 @@ const CommentSection = ({ navigation,route }) => {
 
   const toggleCommentModal = () => {
     setIsCommentModalVisible(!isCommentModalVisible);
-    navigation.navigate("Tab")
+    navigation.goBack();
   };
 
 
@@ -72,8 +74,9 @@ const CommentSection = ({ navigation,route }) => {
           ...commentArray,
           {
             userId,
-            username:user.username,
+            username:username,
             comment,
+            verificationStatus:currentUser!=='student'?'true':'false',
             date: Timestamp.now(),
             time: Timestamp.now(),
           },
@@ -81,8 +84,9 @@ const CommentSection = ({ navigation,route }) => {
       };
       const newComment = {
         userId,
-        username: user.username,
+        username:username,
         comment,
+        verificationStatus:currentUser!=='student'?'true':'false',
         date: Timestamp.now(),
         time: Timestamp.now(),
       };
@@ -138,7 +142,7 @@ const CommentSection = ({ navigation,route }) => {
               {comments &&
                 comments.map((item) => (
                   <View style={styles.commentCard} key={item.time}>
-                    <Text style={styles.useridTxt}>{item.username}</Text>
+                    <Text style={styles.useridTxt}>{item.username}{item.verificationStatus && <Octicons name="verified" size={10} color="#A9B2B6" />}</Text>
                     <View>
                       <Text style={styles.postedComment}>{item.comment}</Text>
                       <Text style={styles.commentDateTime}>

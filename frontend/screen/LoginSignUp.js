@@ -36,6 +36,7 @@ const LoginSignUp = ({ navigation }) => {
     <ImageBackground
       style={[styles.container, styles.backgroundImg]}
       source={require("../assets/images/LoginSignin.jpg")}
+      resizeMode="contain"
     >
       <View style={styles.headerContainer}>
         <Text style={styles.title}>Welcome to Nits Event!</Text>
@@ -62,7 +63,8 @@ const styles = StyleSheet.create({
     backgroundColor:'#fff'
   },
   backgroundImg: {
-    height: "50%",
+    height: "100%",
+    paddingVertical:150
     
   },
   headerContainer: {
@@ -75,23 +77,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    fontSize: 35,
+    fontSize: 30,
     fontFamily: "TekoSemiBold",
     color: "#000000",
+    marginTop:50
   },
   accountTxt: {
     fontFamily: "Convergence",
     color: "#A9B2B6",
+    fontSize:10
   },
   button: {
     backgroundColor: "#F1F0F9",
-    padding: 10,
+    padding: 7,
     margin: 5,
     borderRadius: 5,
   },
   buttonText: {
     color: "#000000",
-    fontSize: 18,
+    fontSize: 14,
     textAlign: "center",
     fontFamily: "Convergence",
   },

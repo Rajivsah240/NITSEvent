@@ -33,18 +33,18 @@ import { Timestamp } from "firebase/firestore";
 import { useAuth } from "../AuthContext";
 
 const ModifyEventScreen = ({ navigation, route }) => {
-  const { item } = route.params;
+  const { event } = route.params;
   const [fontsLoaded, setFontsLoaded] = useState(false);
-  const [clubName, setClubName] = useState(item.clubName);
-  const [eventName, setEventName] = useState(item.eventName);
-  const [description, setDescription] = useState(item.description);
-  const [date, setDate] = useState(item.date.toDate());
+  const [clubName, setClubName] = useState(event.clubName);
+  const [eventName, setEventName] = useState(event.eventName);
+  const [description, setDescription] = useState(event.description);
+  const [date, setDate] = useState(event.date.toDate());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [time, setTime] = useState(item.time.toDate());
+  const [time, setTime] = useState(event.time.toDate());
   const [showTimePicker, setShowTimePicker] = useState(false);
-  const [venue, setVenue] = useState(item.venue);
-  const [image, setImage] = useState(item.imageURL);
-  const [imageURL, setImageURL] = useState(item.imageURL);
+  const [venue, setVenue] = useState(event.venue);
+  const [image, setImage] = useState(event.imageURL);
+  const [imageURL, setImageURL] = useState(event.imageURL);
   const [imageUploaded, setImageUploaded] = useState(true);
 
   const { user } = useAuth();
@@ -62,11 +62,11 @@ const ModifyEventScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     loadFontsAsync();
-    console.log("Item object:", item);
-    if (item?.id) {
-      console.log("Item ID:", item.id);
+    console.log("Item object:", event);
+    if (event?.id) {
+      console.log("Item ID:", event.id);
     }
-  }, [item]);
+  }, [event]);
 
   if (!fontsLoaded) {
     return null;
@@ -94,7 +94,6 @@ const ModifyEventScreen = ({ navigation, route }) => {
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsEditing: true,
-        // aspect: [4, 3],
         quality: 1,
       });
 
@@ -136,7 +135,7 @@ const ModifyEventScreen = ({ navigation, route }) => {
 
   const handleSubmit = async () => {
     try {
-      await updateDoc(doc(FIRESTORE_DB, "event", item.id), {
+      await updateDoc(doc(FIRESTORE_DB, "event", event.id), {
         uid: user.uid,
         clubName,
         eventName,
@@ -192,11 +191,12 @@ const ModifyEventScreen = ({ navigation, route }) => {
           <View style={{ alignItems: "center" }}>
             <Image source={{ uri: image }} style={styles.imagePreview} />
             <TouchableOpacity
-              style={{ backgroundColor: "blue", marginVertical: 5 }}
+              style={{ backgroundColor: "#fff", marginVertical: 5,padding:5,borderRadius:20 }}
               onPress={uploadImage}
             >
-              <Text>Upload Image</Text>
+              <Text style={{fontSize:10}}>Upload Image</Text>
             </TouchableOpacity>
+              <Text style={{fontSize:7,marginBottom:5}}>(!! Remember to Upload if you have picked a new Img)</Text>
           </View>
         )}
 
@@ -238,9 +238,10 @@ const ModifyEventScreen = ({ navigation, route }) => {
         />
 
         {imageUploaded ? (
-          <Button title="Modify Event" onPress={handleSubmit} />
+          
+          <TouchableOpacity style={styles.modifyBtnCnt} onPress={handleSubmit}><Text style={{fontSize:15}}>Modify Event</Text></TouchableOpacity>
         ) : (
-          <Button disabled title="Modify Event"/>
+          <Button style={styles.modifyBtn} disabled title="Modify Event"/>
         )}
       </View>
     </ScrollView>
@@ -249,32 +250,34 @@ const ModifyEventScreen = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
   container: {
+    flex:1,
     padding: 30,
-    backgroundColor: "#f4f5ff",
+    backgroundColor: "#F1F0F9",
     height: "100%",
-    marginTop: 20,
+    // marginTop: 20,
   },
   headerText: {
     fontSize: 30,
-    fontFamily: "TekoSemiBold",
+    fontFamily: "TekoLight",
     marginBottom: 20,
   },
   input: {
     height: 40,
-    borderColor: "gray",
+    borderColor: "#fff",
     borderWidth: 1,
     marginBottom: 20,
     paddingLeft: 10,
-    borderRadius: 5,
+    borderRadius: 20,
   },
   imageUploadButton: {
-    backgroundColor: "blue",
+    backgroundColor: "#fff",
     padding: 10,
     borderRadius: 5,
-    marginBottom: 20,
+    marginBottom: 10,
+    marginHorizontal:80
   },
   imageUploadText: {
-    color: "white",
+    color: "black",
     textAlign: "center",
   },
   imagePreview: {
@@ -287,7 +290,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-evenly",
-    borderBlockColor: "black",
+    borderBlockColor: "#000000",
     borderWidth: 1,
     marginHorizontal: 70,
     marginBottom: 10,
@@ -305,5 +308,16 @@ const styles = StyleSheet.create({
   selectedDateTime: {
     fontSize: 16,
   },
+  modifyBtnCnt:{
+    backgroundColor:'#fff',
+    alignItems:'center',
+    marginHorizontal:80,
+    padding:5,
+    borderRadius:15
+  },
+  modifyBtn:{
+    fontSize:20,
+    color:'#000000'
+  }
 });
 export default ModifyEventScreen;

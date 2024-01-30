@@ -1,5 +1,5 @@
 // ClubSignUpScreen.js
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,33 +8,32 @@ import {
   Button,
   TouchableOpacity,
   Image,
-  Alert
+  Alert,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import {
-  FIREBASE_AUTH,
-  FIRESTORE_DB,
-  FIREBASE_APP,
-} from "../config/firebase";
+import { FIREBASE_AUTH, FIRESTORE_DB, FIREBASE_APP } from "../config/firebase";
 
 import { getStorage, getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { createUserWithEmailAndPassword,getAuth } from "firebase/auth";
-import { doc,setDoc } from "firebase/firestore";
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import { customFonts } from "../Theme";
 import * as Font from "expo-font";
+import { Avatar, Divider } from "react-native-paper";
 
-const ClubSignUpScreen = ({navigation}) => {
+const ClubSignUpScreen = ({ navigation }) => {
   const [clubName, setClubName] = useState("");
   const [clubEmail, setClubEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [clubImage, setClubImage] = useState("");
+  const [clubImage, setClubImage] = useState(
+    "https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg"
+  );
   const [clubDescription, setClubDescription] = useState("");
   const [fbHandle, setFbHandle] = useState("");
   const [instaHandle, setInstaHandle] = useState("");
 
   const [imageURL, setImageURL] = useState("");
-  const [uploaded, setUploaded] = useState(false);
+  const [uploaded, setUploaded] = useState(true);
 
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
@@ -64,6 +63,7 @@ const ClubSignUpScreen = ({navigation}) => {
 
       if (!result.canceled) {
         setClubImage(result.assets[0].uri);
+        setUploaded(false);
         console.log("Image URI set:", result.uri);
       }
     } catch (error) {
@@ -100,6 +100,20 @@ const ClubSignUpScreen = ({navigation}) => {
       if (password !== confirmPassword) {
         throw new Error("Passwords don't match");
       }
+      
+
+      if (
+        !clubEmail ||
+        !clubName ||
+        !password ||
+        !confirmPassword ||
+        !imageURL ||
+        !clubDescription ||
+        !fbHandle ||
+        !instaHandle
+      ) {
+        throw new Error("Complete the Form!!");
+      }
 
       // Create a new user in Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(
@@ -123,7 +137,7 @@ const ClubSignUpScreen = ({navigation}) => {
       console.log("Club SignUp successful!");
       navigation.navigate("ClubLogin");
     } catch (error) {
-        Alert.alert(error.message);
+      Alert.alert(error.message);
       console.error("Club SignUp failed", error.message);
     }
   };
@@ -131,15 +145,40 @@ const ClubSignUpScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Club Sign Up</Text>
+      {/* <Divider style={{marginVertical:20}} horizontalInset={true}/> */}
+      {clubImage && (
+        <View style={{ alignItems: "center" }}>
+          <Avatar.Image source={{ uri: clubImage }} style={styles.imagePreview} />
+          <TouchableOpacity
+            style={styles.imageUploadButton}
+            onPress={handleImageUpload}
+          >
+            <Text style={styles.imageUploadText}>Pick an Image</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#F1F0F9",
+              marginVertical: 0,
+              borderWidth: 0.2,
+            }}
+            onPress={uploadImage}
+          >
+            <Text style={{fontSize:8}}>Upload Image</Text>
+          </TouchableOpacity>
+          <Text style={{ fontSize: 8, marginVertical: 10 }}>
+            (Upload First to SignUp!!)
+          </Text>
+        </View>
+      )}
       <TextInput
-        placeholder="Club Name"
+        placeholder="Name"
         placeholderTextColor={"#A9B2B6"}
         onChangeText={setClubName}
         value={clubName}
         style={styles.input}
       />
       <TextInput
-        placeholder="Club Email"
+        placeholder="Email"
         placeholderTextColor={"#A9B2B6"}
         onChangeText={setClubEmail}
         value={clubEmail}
@@ -160,7 +199,7 @@ const ClubSignUpScreen = ({navigation}) => {
         onChangeText={setConfirmPassword}
         value={confirmPassword}
         style={styles.input}
-        secureTextEntry
+        
       />
       {/* <TextInput
         placeholder="Club Image URL"
@@ -168,24 +207,7 @@ const ClubSignUpScreen = ({navigation}) => {
         value={clubImage}
         style={styles.input}
       /> */}
-      <TouchableOpacity
-        style={styles.imageUploadButton}
-        onPress={handleImageUpload}
-      >
-        <Text style={styles.imageUploadText}>Pick an Image</Text>
-      </TouchableOpacity>
 
-      {clubImage && (
-        <View style={{ alignItems: "center" }}>
-          <Image source={{ uri: clubImage }} style={styles.imagePreview} />
-          <TouchableOpacity
-            style={{ backgroundColor: "blue", marginVertical: 5 }}
-            onPress={uploadImage}
-          >
-            <Text>Upload Image</Text>
-          </TouchableOpacity>
-        </View>
-      )}
       <TextInput
         placeholder="Club Description"
         placeholderTextColor={"#A9B2B6"}
@@ -208,10 +230,10 @@ const ClubSignUpScreen = ({navigation}) => {
         value={instaHandle}
         style={styles.input}
       />
-      
+
       <TouchableOpacity style={styles.signUpBtn} onPress={handleSignUp}>
-          <Text style={styles.buttonText}>Sign Up</Text>
-        </TouchableOpacity>
+        <Text style={styles.buttonText}>Sign Up</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -222,56 +244,55 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 20,
-    backgroundColor:'#102733'
+    backgroundColor: "#fff",
   },
   title: {
     fontSize: 30,
     marginBottom: 20,
-    color:'#A9B2B6',
-    fontFamily:'TekoSemiBold'
+    color: "#000000",
+    fontFamily: "TekoLight",
   },
   input: {
-    width: "100%",
-    height: 40,
-    borderColor: "#FCCD00",
+    width: "95%",
+    height: 32,
+    borderColor: "#A9B2B6",
     borderWidth: 1,
     marginBottom: 20,
     paddingLeft: 10,
     borderRadius: 20,
-    color:'#A9B2B6'
+    color: "#A9B2B6",
   },
   imageUploadButton: {
-    backgroundColor: "#283F4D",
+    backgroundColor: "#F1F0F9",
     padding: 10,
     borderRadius: 5,
-    marginBottom: 20,
-
+    marginBottom: 10,
   },
   imageUploadText: {
-    color: "#FCCD00",
+    color: "#000000",
     textAlign: "center",
-    fontFamily:'Convergence'
+    fontFamily: "Convergence",
+    fontSize: 10,
   },
   imagePreview: {
-    width: 50,
-    height: 50,
+    // width: 50,
+    // height: 50,
     resizeMode: "contain",
     marginVertical: 10,
   },
   signUpBtn: {
-    backgroundColor: "#FCCD00",
+    backgroundColor: "#F1F0F9",
     padding: 10,
-    width:"50%",
+    width: "50%",
     borderRadius: 20,
     alignItems: "center",
-    justifyContent:'center',
+    justifyContent: "center",
     marginBottom: 10,
-
   },
   buttonText: {
     color: "black",
     fontSize: 16,
-    fontFamily:'Convergence'
+    fontFamily: "Convergence",
   },
 });
 

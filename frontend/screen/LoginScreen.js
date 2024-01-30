@@ -9,7 +9,7 @@ const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const { loginStudent, loggedIn } = useAuth();
+  const { loginStudent, loggedIn,currentUser } = useAuth();
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
   const loadFontsAsync = async () => {
@@ -19,7 +19,7 @@ const LoginScreen = ({navigation}) => {
 
   
   useEffect(() => {
-    if (loggedIn) {
+    if (currentUser==='student' && loggedIn) {
       navigation.navigate("Tab");
     }
     loadFontsAsync();
