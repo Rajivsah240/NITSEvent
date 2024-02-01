@@ -16,102 +16,99 @@ import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { useAuth } from "../AuthContext";
 
-
 const ClubAboutUs = () => {
-    const {user}=useAuth();
-    const [clubInfo,setClubInfo]=useState(null);
-    const [loaded,setLoaded]=useState(false);
-    const fetchDetails=async()=>{
-        try{
-            const clubUserRef = doc(FIRESTORE_DB,'clubUsers',user.uid);
-            const clubSnapshot = await getDoc(clubUserRef);
+  const { user } = useAuth();
+  const [clubInfo, setClubInfo] = useState(null);
+  const [loaded, setLoaded] = useState(false);
+  const fetchDetails = async () => {
+    try {
+      const clubUserRef = doc(FIRESTORE_DB, "clubUsers", user.uid);
+      const clubSnapshot = await getDoc(clubUserRef);
 
-            if(!clubSnapshot.exists()){
-                console.error("No such user!");
-                return;
-            }
-            const clubData = clubSnapshot.data();
-            setClubInfo({...clubData});
-            console.log(clubInfo);
-            setLoaded(true);
-
-        }catch(error){
-            console.log("Error getting documents: ", error);
-        }
+      if (!clubSnapshot.exists()) {
+        console.error("No such user!");
+        return;
+      }
+      const clubData = clubSnapshot.data();
+      setClubInfo({ ...clubData });
+      console.log(clubInfo);
+      setLoaded(true);
+    } catch (error) {
+      console.log("Error getting documents: ", error);
     }
+  };
 
-    useEffect(()=>{
-        fetchDetails();
-    },[])
-    
-    if(!loaded){
-        return null;
-    }
-  
-  
-    return (
-        <ScrollView>
-    <View style={styles.mainCnt}>
-      <View style={styles.ImgandFollowCnt}>
-        <View style={styles.image}>
-          <Avatar.Image source={{ uri: clubInfo.imageURL }} size={100} />
-        </View>
-        <View style={styles.nameCnt}>
-          <Text style={styles.nameTxt}>{clubInfo.clubName}</Text>
+  useEffect(() => {
+    fetchDetails();
+  }, []);
+
+  if (!loaded) {
+    return null;
+  }
+
+  return (
+    <ScrollView>
+      <View style={styles.mainCnt}>
+        <View style={styles.ImgandFollowCnt}>
+          <View style={styles.image}>
+            <Avatar.Image source={{ uri: clubInfo.imageURL }} size={100} />
+          </View>
+          <View style={styles.nameCnt}>
+            <Text style={styles.nameTxt}>{clubInfo.clubName}</Text>
+          </View>
+          <Divider horizontalInset={true} />
+          <View style={styles.flwrsCnt}>
+            <View style={styles.detailCnt}>
+              <Text style={styles.detailsNoTxt}>0</Text>
+              <Text style={styles.detailsTxt}>Members</Text>
+            </View>
+            <View style={styles.detailCnt}>
+              <Text style={styles.detailsNoTxt}>
+                {clubInfo.followers ? clubInfo.followers.length : 0}
+              </Text>
+              <Text style={styles.detailsTxt}>Followers</Text>
+            </View>
+          </View>
         </View>
         <Divider horizontalInset={true} />
-        <View style={styles.flwrsCnt}>
-          <View style={styles.detailCnt}>
-            <Text style={styles.detailsNoTxt}>0</Text>
-            <Text style={styles.detailsTxt}>Members</Text>
+        <View style={styles.clubDetails}>
+          <View style={styles.AboutHeader}>
+            <Text style={styles.AboutTxt}>About Us</Text>
           </View>
-          <View style={styles.detailCnt}>
-            <Text style={styles.detailsNoTxt}>
-              {clubInfo.followers ? clubInfo.followers.length : 0}
-            </Text>
-            <Text style={styles.detailsTxt}>Followers</Text>
+          <View style={styles.descCnt}>
+            <Text style={styles.desc}>{clubInfo.clubDescription}</Text>
           </View>
-        </View>
-        
-      </View>
-      <Divider horizontalInset={true} />
-      <View style={styles.clubDetails}>
-        <View style={styles.AboutHeader}>
-          <Text style={styles.AboutTxt}>About Us</Text>
-        </View>
-        <View style={styles.descCnt}>
-          <Text style={styles.desc}>{clubInfo.clubDescription}</Text>
-        </View>
 
-        <View style={styles.membersCnt}>
-          <View style={styles.membersHeader}>
-            <Text style={styles.membersHeaderTxt}>Members</Text>
+          <View style={styles.membersCnt}>
+            <View style={styles.membersHeader}>
+              <Text style={styles.membersHeaderTxt}>Members</Text>
+            </View>
+            <View>
+              <Text></Text>
+            </View>
           </View>
-          <View>
-            <Text></Text>
-          </View>
-        </View>
-        <View style={styles.socialPageCnt}>
-          <View style={styles.socialPageHeader}>
-            <Text style={styles.socialPageTxt}>Social Pages</Text>
-          </View>
-          <View style={styles.socialLinks}>
-            <TouchableOpacity
-              style={styles.ico}
-              onPress={() => openExternalLink(clubInfo.fbHandle)}
-            >
-              <Entypo name="facebook" size={35} color="#1925b0" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.ico}
-              onPress={() => openExternalLink(clubInfo.instaHandle)}
-            >
-              <Entypo name="instagram" size={35} color="red" />
-            </TouchableOpacity>
+          <View style={styles.socialPageCnt}>
+            <View style={styles.socialPageHeader}>
+              <Text style={styles.socialPageTxt}>Social Pages</Text>
+            </View>
+            <View style={styles.socialLinks}>
+              <TouchableOpacity
+                style={styles.ico}
+                onPress={() => openExternalLink(clubInfo.fbHandle)}
+              >
+                <Entypo name="facebook" size={35} color="#1925b0" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.ico}
+                onPress={() => openExternalLink(clubInfo.instaHandle)}
+              >
+                <Entypo name="instagram" size={35} color="red" />
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </View>
-    </View></ScrollView>
+    </ScrollView>
   );
 };
 
@@ -119,7 +116,7 @@ const styles = StyleSheet.create({
   mainCnt: {
     flex: 1,
     backgroundColor: "#F1F0F9",
-    paddingBottom:100
+    paddingBottom: 100,
   },
   ImgandFollowCnt: {
     paddingVertical: 30,
