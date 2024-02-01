@@ -28,7 +28,7 @@ const ClubLogin = ({ navigation }) => {
  
   
   useEffect(() => {
-    if (currentUser==='Club' && loggedIn) {
+    if (currentUser =='Club' && loggedIn) {
       navigation.navigate("ClubHomeScreen");
     }
     loadFontsAsync();

@@ -131,10 +131,11 @@ const EditProfileClub = () => {
             onChangeText={setClubName}
           />
           <TextInput
-            style={styles.input}
+            style={[styles.input,styles.descInput]}
             placeholder="Enter Club Description"
             value={clubDescription}
             onChangeText={setClubDescription}
+            multiline={true}
   
           />
           <TextInput
@@ -203,6 +204,9 @@ const EditProfileClub = () => {
       height:40,
       paddingLeft:10,
       marginBottom:20
+    },
+    descInput:{
+      height:100
     }
   });
 export default EditProfileClub

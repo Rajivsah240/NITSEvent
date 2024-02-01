@@ -19,10 +19,11 @@ const LoginScreen = ({navigation}) => {
 
   
   useEffect(() => {
-    if (currentUser==='student' && loggedIn) {
+    if (currentUser=='student' && loggedIn) {
       navigation.navigate("Tab");
     }
     loadFontsAsync();
+    console.log(currentUser)
   }, [loggedIn]);
   
   if (!fontsLoaded) {

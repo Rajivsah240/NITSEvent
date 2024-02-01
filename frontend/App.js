@@ -30,6 +30,8 @@ import CommentSection from './screen/CommentSection';
 import EditProfileStudent from './screen/EditProfileStudent';
 import BookmarkEvents from './screen/BookmarkEvents';
 import EditProfileClub from './screen/EditProfileClub';
+import ClubIndividualDetails from './screen/ClubIndividualDetails';
+import ClubAboutUs from './screen/ClubAboutUs';
 
 
 
@@ -53,6 +55,7 @@ const App = () => {
         <Stack.Screen name="DetailScreenStudent" component={DetailScreenStudent} />
         <Stack.Screen name="ClubSignUpScreen" component={ClubSignUpScreen}/>
         <Stack.Screen name="RegisteredEvents" component={RegisteredEvents}/>
+        <Stack.Screen name="ClubIndividualDetails" component={ClubIndividualDetails}/>
         <Stack.Screen name='ClubLogin' component={ClubLogin}/>
         <Stack.Screen name='ClubHomeScreen' component={ClubHomeScreen}/>
         <Stack.Screen name='EventAdd' component={EventAdd}/>
@@ -63,6 +66,7 @@ const App = () => {
         <Stack.Screen name="EditProfileStudent" component={EditProfileStudent}/>
         <Stack.Screen name="BookmarkEvents" component={BookmarkEvents}/>
         <Stack.Screen name="EditProfileClub" component={EditProfileClub}/>
+        <Stack.Screen name="ClubAboutUs" component={ClubAboutUs}/>
         <Stack.Screen
           name="Tab"
           component={TabNavigator}

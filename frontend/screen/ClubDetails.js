@@ -20,6 +20,7 @@ import { Divider } from "react-native-paper";
 const ClubDetails = ({ navigation }) => {
   const [clubs, setClubs] = useState([]);
   const [filteredClubs, setfilteredClubs] = useState([]);
+  const [renderChanges,setRenderChanges] = useState(false);
   const [searchText, setSearchText] = useState("");
   const fetchClubs = async () => {
     try {
@@ -52,6 +53,19 @@ const ClubDetails = ({ navigation }) => {
     loadFontsAsync();
     fetchClubs();
   }, []);
+
+  useEffect(() => {
+    fetchClubs();
+  }, [renderChanges]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setRenderChanges((prev) => !prev);
+    }, 2000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
 
   if (!fontsLoaded) {
     return null;

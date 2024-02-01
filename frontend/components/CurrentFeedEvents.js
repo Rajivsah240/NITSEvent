@@ -104,7 +104,6 @@ const CurrentFeedEvents = ({ navigation, onRenderChanges, event }) => {
       const eventData = eventSnapshot.data();
       const likesArray = Array.isArray(eventData?.likes) ? eventData.likes : [];
 
-      // Check if userId is not already in the likesArray
       if (!likesArray.includes(userId)) {
         const updatedEvent = {
           ...eventData,

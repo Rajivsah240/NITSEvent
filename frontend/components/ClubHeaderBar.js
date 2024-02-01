@@ -146,7 +146,7 @@ const ClubHeaderBar = ({navigation}) => {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.menuItem}
-                onPress={()=>{}}
+                onPress={()=>{navigation.navigate("ClubAboutUs")}}
               >
                 <MaterialIcons name="emoji-events" size={20} color="black" />
                 <Text> About Us</Text>

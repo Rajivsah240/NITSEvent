@@ -173,7 +173,7 @@ const ClubEventDetails = ({ navigation, route }) => {
           <>
             <View style={styles.regCountCnt}>
               <Text style={styles.regCount}>
-                Total Registrations: {event.registeredStudents.length}{" "}
+                Total Registrations: {event.registeredStudents?event.registeredStudents.length:0}{" "}
               </Text>
             </View>
             <FlatList

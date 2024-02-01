@@ -10,7 +10,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [currentUser,setCurrentUser] = useState("");
+  const [currentUser,setCurrentUser] = useState('');
 
 
   useEffect(()=>{
@@ -60,8 +60,10 @@ export const AuthProvider = ({ children }) => {
           instaHandle,
         });
 
+        setCurrentUser('Club');
         setLoggedIn(true);
-        setCurrentUser("Club");
+        console.log(currentUser)
+        
 
         await AsyncStorage.setItem('userData',JSON.stringify({
           uid: userCredential.user.uid,
@@ -110,8 +112,9 @@ export const AuthProvider = ({ children }) => {
           scholarID,
         });
 
+        setCurrentUser('student');
         setLoggedIn(true);
-        setCurrentUser("student");
+        console.log(currentUser)
 
         await AsyncStorage.setItem('userData',JSON.stringify({
           uid: userCredential.user.uid,
